@@ -13,7 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace DashboardAndServer
+namespace ElsaDashboardAndServer
 {
     public class Startup
     {
