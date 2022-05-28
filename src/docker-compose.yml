@@ -1,0 +1,82 @@
+version: '3.7'
+
+networks:
+  elsa-net:
+    external: true
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: FactorySqlServer
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Cal1forn!cat_on"
+    networks:
+      - elsa-net
+    ports:
+      - "1414:1433"
+
+  smtp:
+    image: reachfive/fake-smtp-server:latest
+    container_name: FakeSmtpServer
+    networks:
+      - elsa-net
+    ports:
+      - "1025:1025"
+      - "1080:1080"
+
+  app:
+    build:
+      context: FactoryApp
+      dockerfile: Dockerfile
+    container_name: FactoryApp
+    command:
+      [
+        "./wait-for-it.sh",
+        "FactorySqlServer:1433",
+        "-t",
+        "120",
+        "--",
+        "dotnet",
+        "FactoryApp.dll"
+      ]
+    depends_on:
+      - db
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: "http://+:80"
+      ConnectionStrings__ApplicationDbContext: "Server=FactorySqlServer;database=FactoryDb;User Id=SA;Password=Cal1forn!cat_on"
+    networks:
+      - elsa-net
+    ports:
+      - "8010:80"
+
+  elsa:
+    build:
+      context: ElsaDashboardAndServer
+      dockerfile: Dockerfile
+    container_name: Elsa
+    command:
+      [
+        "./wait-for-it.sh",
+        "FactoryApp:80",
+        "-t",
+        "120",
+        "--",
+        "dotnet",
+        "ElsaDashboardAndServer.dll"
+      ]
+    depends_on:
+      - app
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: "http://+:80"
+      Elsa__Server__BaseUrl: "http://localhost:8011"
+      Elsa__Smtp__Host: "localhost"
+      Elsa__Smtp__Port: "1025"
+      Elsa__Smtp__DefaultSender: "oscartest@fakemail.com"
+      Elsa__Smtp__SecureSocketOptions: 0
+    networks:
+      - elsa-net
+    ports:
+      - "8011:80"

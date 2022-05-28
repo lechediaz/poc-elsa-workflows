@@ -1,0 +1,13 @@
+# directories
+**/bin/
+**/obj/
+**/out/
+**/node_modules/
+.vs/
+
+# files
+.dockerignore
+Dockerfile
+**/.gitignore
+**/*.md
+**/package-lock.json
