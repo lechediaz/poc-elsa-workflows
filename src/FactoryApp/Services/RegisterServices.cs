@@ -1,4 +1,6 @@
+using FactoryApp.Services.RawMaterials;
 using FactoryApp.Services.Requests;
+using FactoryApp.Services.Users;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -14,11 +16,21 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns>The services.</returns>
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
+            #region Raw Materials
+            services.AddScoped<IRawMaterialsListService, RawMaterialsListService>();
+            #endregion
+
+            #region Requests
             services.AddScoped<IApproveRequestService, ApproveRequestService>();
             services.AddScoped<ICreateRequestService, CreateRequestService>();
             services.AddScoped<IPublishRequestService, PublishRequestService>();
             services.AddScoped<IRejectRequestService, RejectRequestService>();
             services.AddScoped<IValidateRequestExistService, ValidateRequestExistService>();
+            #endregion
+
+            #region Users
+            services.AddScoped<IUsersListService, UsersListService>();
+            #endregion
 
             return services;
         }

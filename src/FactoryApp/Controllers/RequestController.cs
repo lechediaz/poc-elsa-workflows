@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FactoryApp.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/request")]
     public class RequestController : ControllerBase
     {
         private readonly IApproveRequestService approveRequestService;
@@ -27,7 +27,7 @@ namespace FactoryApp.Controllers
             this.rejectRequestService = rejectRequestService;
         }
 
-        [HttpPost("[action]")]
+        [HttpPost("create")]
         public async Task<ActionResult<int>> Create(CreateRequestDto request)
         {
             ServiceResult<int> result = await createRequestService.CreateAsync(request);
@@ -40,7 +40,7 @@ namespace FactoryApp.Controllers
             return Problem(result.Message);
         }
 
-        [HttpPost("[action]")]
+        [HttpPost("publish")]
         public async Task<ActionResult> Publish(PublishRequestDto info)
         {
             ServiceResult result = await publishRequestService.PublishAsync(info);
@@ -53,7 +53,7 @@ namespace FactoryApp.Controllers
             return Problem(result.Message);
         }
 
-        [HttpPost("[action]/{requestId:int}")]
+        [HttpPost("approve/{requestId:int}")]
         public async Task<ActionResult> Approve([FromRoute] int requestId)
         {
             ServiceResult result = await approveRequestService.ApproveAsync(requestId);
@@ -66,7 +66,7 @@ namespace FactoryApp.Controllers
             return Problem(result.Message);
         }
 
-        [HttpPost("[action]/{requestId:int}")]
+        [HttpPost("reject/{requestId:int}")]
         public async Task<ActionResult> Reject([FromRoute] int requestId)
         {
             ServiceResult result = await rejectRequestService.RejectAsync(requestId);
