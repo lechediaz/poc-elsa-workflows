@@ -1,0 +1,1160 @@
+{
+  "$id": "1",
+  "definitionId": "50bdb362799d4960899ec15b7ecb1388",
+  "versionId": "dfc17c07efee463392d1f33aff7168d4",
+  "name": "PublicarSolicitud",
+  "displayName": "Publicación y Aprobación de Solicitudes",
+  "description": "Flujo de aprobación de solicitudes para integrar Elsa a una API.",
+  "version": 1,
+  "variables": {
+    "$id": "2",
+    "data": {}
+  },
+  "customAttributes": {
+    "$id": "3",
+    "data": {}
+  },
+  "isSingleton": false,
+  "persistenceBehavior": "WorkflowBurst",
+  "deleteCompletedInstances": false,
+  "isPublished": true,
+  "isLatest": true,
+  "activities": [
+    {
+      "$id": "4",
+      "activityId": "d08ea47f-b83b-4ffe-850d-48c8fe6636b5",
+      "type": "HttpEndpoint",
+      "displayName": "Publicar solicitud Endpoint",
+      "description": "Endpoint para publicar una solicitud, obtener los links de aprobación e iniciar el flujo de aprobación.",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "5",
+          "name": "Path",
+          "expressions": {
+            "$id": "6",
+            "Literal": "/request/publish"
+          }
+        },
+        {
+          "$id": "7",
+          "name": "Methods",
+          "expressions": {
+            "$id": "8",
+            "Json": "[\"POST\"]"
+          }
+        },
+        {
+          "$id": "9",
+          "name": "ReadContent",
+          "expressions": {
+            "$id": "10",
+            "Literal": "true"
+          }
+        },
+        {
+          "$id": "11",
+          "name": "TargetType",
+          "expressions": {
+            "$id": "12"
+          }
+        },
+        {
+          "$id": "13",
+          "name": "Schema",
+          "syntax": "Literal",
+          "expressions": {
+            "$id": "14",
+            "Literal": ""
+          }
+        },
+        {
+          "$id": "15",
+          "name": "Authorize",
+          "expressions": {
+            "$id": "16"
+          }
+        },
+        {
+          "$id": "17",
+          "name": "Policy",
+          "expressions": {
+            "$id": "18"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "19",
+      "activityId": "c4792c7f-ceff-4299-b1f1-52fbc23557a1",
+      "type": "SetVariable",
+      "displayName": "Guardar solicitud en variable",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "20",
+          "name": "VariableName",
+          "expressions": {
+            "$id": "21",
+            "Literal": "Solicitud"
+          }
+        },
+        {
+          "$id": "22",
+          "name": "Value",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "23",
+            "JavaScript": "input.Body"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "24",
+      "activityId": "4198fa95-970c-4817-9489-42841eacdf53",
+      "type": "SendEmail",
+      "displayName": "Enviar correo al aprobador",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "25",
+          "name": "From",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "26",
+            "Literal": "",
+            "Liquid": "",
+            "JavaScript": "Solicitud.Author.Email"
+          }
+        },
+        {
+          "$id": "27",
+          "name": "To",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "28",
+            "Json": "[]",
+            "JavaScript": "[Solicitud.Approver.Email]"
+          }
+        },
+        {
+          "$id": "29",
+          "name": "Subject",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "30",
+            "Liquid": "Request received from {{Variables.Solicitud.Author.Name}}"
+          }
+        },
+        {
+          "$id": "31",
+          "name": "Attachments",
+          "expressions": {
+            "$id": "32"
+          }
+        },
+        {
+          "$id": "33",
+          "name": "Body",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "34",
+            "Liquid": "Hello {{ Variables.Solicitud.Approver.Name }},<br><br>You received a request from {{ Variables.Solicitud.Author.Name }} for review.<br><br><a href=\"{{ Variables.ApproveLink }}\">Approve</a> or <a href=\"{{ Variables.RejectLink }}\">Reject</a>"
+          }
+        },
+        {
+          "$id": "35",
+          "name": "Cc",
+          "expressions": {
+            "$id": "36"
+          }
+        },
+        {
+          "$id": "37",
+          "name": "Bcc",
+          "expressions": {
+            "$id": "38"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "39",
+      "activityId": "25858cc7-c72c-4fd7-ad98-74583cde461b",
+      "type": "WriteHttpResponse",
+      "displayName": "Respuesta solicitud publicada",
+      "description": "Respuesta para indicar que se ha recibido el documento",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "40",
+          "name": "Content",
+          "expressions": {
+            "$id": "41",
+            "Literal": "<h1>Request for Approval Sent</h1><p>Your request has been received and will be reviewed shortly.</p>"
+          }
+        },
+        {
+          "$id": "42",
+          "name": "ContentType",
+          "expressions": {
+            "$id": "43",
+            "Literal": "text/html"
+          }
+        },
+        {
+          "$id": "44",
+          "name": "StatusCode",
+          "expressions": {
+            "$id": "45"
+          }
+        },
+        {
+          "$id": "46",
+          "name": "CharSet",
+          "expressions": {
+            "$id": "47"
+          }
+        },
+        {
+          "$id": "48",
+          "name": "ResponseHeaders",
+          "expressions": {
+            "$id": "49"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "50",
+      "activityId": "fabd99b2-004c-47bb-8593-bca67554137e",
+      "type": "Fork",
+      "displayName": "Fork",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "51",
+          "name": "Branches",
+          "expressions": {
+            "$id": "52",
+            "Json": "[\"Approve\",\"Reject\",\"Remind\"]"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "53",
+      "activityId": "bec2dd54-007f-4959-8e3b-3d620419f5f6",
+      "type": "SignalReceived",
+      "displayName": "Solicitud aprobada",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "54",
+          "name": "Signal",
+          "expressions": {
+            "$id": "55",
+            "Literal": "Approve"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "56",
+      "activityId": "011fcb62-0771-4f60-95a0-d39770762aaf",
+      "type": "SendEmail",
+      "displayName": "Notificar documento aprobado",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "57",
+          "name": "From",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "58",
+            "Literal": "oscartest@fakemail.com",
+            "Liquid": "",
+            "JavaScript": "Solicitud.Approver.Email"
+          }
+        },
+        {
+          "$id": "59",
+          "name": "To",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "60",
+            "JavaScript": "[Solicitud.Author.Email]"
+          }
+        },
+        {
+          "$id": "61",
+          "name": "Subject",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "62",
+            "Liquid": "Request {{ Variables.Solicitud.RequestId }} Approved!"
+          }
+        },
+        {
+          "$id": "63",
+          "name": "Attachments",
+          "expressions": {
+            "$id": "64"
+          }
+        },
+        {
+          "$id": "65",
+          "name": "Body",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "66",
+            "Liquid": "Great job {{ Variables.Solicitud.Author.Name }}, that request is perfect."
+          }
+        },
+        {
+          "$id": "67",
+          "name": "Cc",
+          "expressions": {
+            "$id": "68"
+          }
+        },
+        {
+          "$id": "69",
+          "name": "Bcc",
+          "expressions": {
+            "$id": "70"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "71",
+      "activityId": "69715237-90ae-41a0-a0b3-729eb9a90bc4",
+      "type": "SignalReceived",
+      "displayName": "Solicitud rechazada",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "72",
+          "name": "Signal",
+          "expressions": {
+            "$id": "73",
+            "Literal": "Reject"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "74",
+      "activityId": "3f61a335-ed5a-4837-81c2-66fd188d7008",
+      "type": "SendEmail",
+      "displayName": "Notificar documento rechazado",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "75",
+          "name": "From",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "76",
+            "Literal": "oscartest@fakemail.com",
+            "Liquid": "{{ Document.Approver.Email }}",
+            "JavaScript": "Solicitud.Approver.Email"
+          }
+        },
+        {
+          "$id": "77",
+          "name": "To",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "78",
+            "JavaScript": "[Solicitud.Author.Email]"
+          }
+        },
+        {
+          "$id": "79",
+          "name": "Subject",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "80",
+            "Liquid": "Document {{ Variables.Solicitud.RequestId }} Rejected"
+          }
+        },
+        {
+          "$id": "81",
+          "name": "Attachments",
+          "expressions": {
+            "$id": "82"
+          }
+        },
+        {
+          "$id": "83",
+          "name": "Body",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "84",
+            "Liquid": "Nice try {{ Variables.Solicitud.Author.Name }}, but that request needs work."
+          }
+        },
+        {
+          "$id": "85",
+          "name": "Cc",
+          "expressions": {
+            "$id": "86"
+          }
+        },
+        {
+          "$id": "87",
+          "name": "Bcc",
+          "expressions": {
+            "$id": "88"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "89",
+      "activityId": "45b77456-ed4b-470a-b822-7381c21c2418",
+      "type": "Timer",
+      "name": "Recordatorio",
+      "displayName": "Timer recordatorio",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "90",
+          "name": "Timeout",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "91",
+            "JavaScript": "Duration.FromMinutes(1)"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "92",
+      "activityId": "e59a9213-3e2b-47a6-b242-fac204bbc048",
+      "type": "SendEmail",
+      "displayName": "Enviar recordatorio",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "93",
+          "name": "From",
+          "expressions": {
+            "$id": "94",
+            "Literal": "elsanoreply@fakemail.com"
+          }
+        },
+        {
+          "$id": "95",
+          "name": "To",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "96",
+            "Json": "[]",
+            "JavaScript": "[Solicitud.Approver.Email]"
+          }
+        },
+        {
+          "$id": "97",
+          "name": "Subject",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "98",
+            "Liquid": "{{ Variables.Solicitud.Author.Name }} is waiting for your review!"
+          }
+        },
+        {
+          "$id": "99",
+          "name": "Attachments",
+          "expressions": {
+            "$id": "100"
+          }
+        },
+        {
+          "$id": "101",
+          "name": "Body",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "102",
+            "Liquid": "Don't forget to review the request {{ Variables.Solicitud.RequestId }}.<br><a href=\"{{ Variables.ApproveLink }}\">Approve</a> or <a href=\"{{ Variables.RejectLink }}\">Reject</a>"
+          }
+        },
+        {
+          "$id": "103",
+          "name": "Cc",
+          "expressions": {
+            "$id": "104"
+          }
+        },
+        {
+          "$id": "105",
+          "name": "Bcc",
+          "expressions": {
+            "$id": "106"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "107",
+      "activityId": "928114fc-4a89-4337-9616-283f047cecf6",
+      "type": "Join",
+      "displayName": "Join",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "108",
+          "name": "Mode",
+          "expressions": {
+            "$id": "109",
+            "Literal": "WaitAny"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "110",
+      "activityId": "f7ede012-ee9b-475e-8853-9fa27238e155",
+      "type": "WriteHttpResponse",
+      "displayName": "HTTP Response",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "111",
+          "name": "Content",
+          "expressions": {
+            "$id": "112",
+            "Literal": "Thanks for the hard work!"
+          }
+        },
+        {
+          "$id": "113",
+          "name": "ContentType",
+          "expressions": {
+            "$id": "114",
+            "Literal": "text/html"
+          }
+        },
+        {
+          "$id": "115",
+          "name": "StatusCode",
+          "expressions": {
+            "$id": "116"
+          }
+        },
+        {
+          "$id": "117",
+          "name": "CharSet",
+          "expressions": {
+            "$id": "118"
+          }
+        },
+        {
+          "$id": "119",
+          "name": "ResponseHeaders",
+          "expressions": {
+            "$id": "120"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "121",
+      "activityId": "73e850c1-b825-41e3-be67-223272bdd3f7",
+      "type": "SetVariable",
+      "displayName": "Asignar DecisionTomada en false",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "122",
+          "name": "VariableName",
+          "expressions": {
+            "$id": "123",
+            "Literal": "DecisionTomada"
+          }
+        },
+        {
+          "$id": "124",
+          "name": "Value",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "125",
+            "JavaScript": "false"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "126",
+      "activityId": "a535cb5e-7ad5-4811-8c30-0a66f5bdf7a4",
+      "type": "If",
+      "displayName": "Evaluar DecisionTomada",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "127",
+          "name": "Condition",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "128",
+            "JavaScript": "DecisionTomada === true"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "129",
+      "activityId": "5905d170-615f-4f1e-9214-eca24329d022",
+      "type": "SetVariable",
+      "displayName": "Asignar DecisionTomada en true",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "130",
+          "name": "VariableName",
+          "expressions": {
+            "$id": "131",
+            "Literal": "DecisionTomada"
+          }
+        },
+        {
+          "$id": "132",
+          "name": "Value",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "133",
+            "JavaScript": "true"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "134",
+      "activityId": "7ca9f3cc-53e1-40ec-b317-aa82439f7691",
+      "type": "ClearTimer",
+      "displayName": "Detener Recordatorio",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "135",
+          "name": "ActivityId",
+          "expressions": {
+            "$id": "136",
+            "Literal": "Recordatorio",
+            "JavaScript": ""
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "137",
+      "activityId": "e02156f2-55a0-4051-896b-5e0805e28a26",
+      "type": "SendHttpRequest",
+      "displayName": "Publicar solicitud desde API",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "138",
+          "name": "Url",
+          "expressions": {
+            "$id": "139",
+            "Literal": "https://localhost:8010/api/request/publish"
+          }
+        },
+        {
+          "$id": "140",
+          "name": "Method",
+          "expressions": {
+            "$id": "141",
+            "Literal": "POST"
+          }
+        },
+        {
+          "$id": "142",
+          "name": "Content",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "143",
+            "Liquid": "{\r\n    \"RequestId\": {{ Variables.Solicitud.RequestId }},\r\n    \"ApproveLink\": \"{{ Variables.ApproveLink }}\",\r\n    \"RejectLink\": \"{{ RejectLink }}\"\r\n}"
+          }
+        },
+        {
+          "$id": "144",
+          "name": "ContentType",
+          "expressions": {
+            "$id": "145",
+            "Literal": "application/json"
+          }
+        },
+        {
+          "$id": "146",
+          "name": "ReadContent",
+          "expressions": {
+            "$id": "147"
+          }
+        },
+        {
+          "$id": "148",
+          "name": "ResponseContentParserName",
+          "expressions": {
+            "$id": "149"
+          }
+        },
+        {
+          "$id": "150",
+          "name": "ResponseContentTargetType",
+          "expressions": {
+            "$id": "151"
+          }
+        },
+        {
+          "$id": "152",
+          "name": "SupportedStatusCodes",
+          "expressions": {
+            "$id": "153"
+          }
+        },
+        {
+          "$id": "154",
+          "name": "Authorization",
+          "expressions": {
+            "$id": "155"
+          }
+        },
+        {
+          "$id": "156",
+          "name": "RequestHeaders",
+          "expressions": {
+            "$id": "157"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "158",
+      "activityId": "68a34cea-ce6b-4a30-8d2f-55bed773a9dc",
+      "type": "SetVariable",
+      "displayName": "Asignar variable ApproveLink",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "159",
+          "name": "VariableName",
+          "expressions": {
+            "$id": "160",
+            "Literal": "ApproveLink"
+          }
+        },
+        {
+          "$id": "161",
+          "name": "Value",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "162",
+            "Liquid": "{{ \"Approve\" | signal_url }}"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "163",
+      "activityId": "74321f15-7865-4b4b-986b-adae3960c608",
+      "type": "SetVariable",
+      "displayName": "Asignar variable RejectLink",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "164",
+          "name": "VariableName",
+          "expressions": {
+            "$id": "165",
+            "Literal": "RejectLink"
+          }
+        },
+        {
+          "$id": "166",
+          "name": "Value",
+          "expressions": {
+            "$id": "167",
+            "Literal": "{{ \"Reject\" | signal_url }}"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "168",
+      "activityId": "2f3537f5-7c5a-414a-a41f-c6c3ac123d31",
+      "type": "SendHttpRequest",
+      "displayName": "Aprobar solicitud desde API",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "169",
+          "name": "Url",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "170",
+            "Literal": "https://localhost:8010/api/request/approve",
+            "JavaScript": "https://localhost:8010/api/request/approve",
+            "Liquid": "https://localhost:8010/api/request/approve/{{ Variables.Solicitud.RequestId }}"
+          }
+        },
+        {
+          "$id": "171",
+          "name": "Method",
+          "expressions": {
+            "$id": "172",
+            "Literal": "POST"
+          }
+        },
+        {
+          "$id": "173",
+          "name": "Content",
+          "expressions": {
+            "$id": "174"
+          }
+        },
+        {
+          "$id": "175",
+          "name": "ContentType",
+          "expressions": {
+            "$id": "176"
+          }
+        },
+        {
+          "$id": "177",
+          "name": "ReadContent",
+          "expressions": {
+            "$id": "178"
+          }
+        },
+        {
+          "$id": "179",
+          "name": "ResponseContentParserName",
+          "expressions": {
+            "$id": "180"
+          }
+        },
+        {
+          "$id": "181",
+          "name": "ResponseContentTargetType",
+          "expressions": {
+            "$id": "182"
+          }
+        },
+        {
+          "$id": "183",
+          "name": "SupportedStatusCodes",
+          "expressions": {
+            "$id": "184"
+          }
+        },
+        {
+          "$id": "185",
+          "name": "Authorization",
+          "expressions": {
+            "$id": "186"
+          }
+        },
+        {
+          "$id": "187",
+          "name": "RequestHeaders",
+          "expressions": {
+            "$id": "188"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "189",
+      "activityId": "92443440-fbf5-4c2f-b573-c9136adb3737",
+      "type": "SendHttpRequest",
+      "displayName": "Rechazar solicitud desde API",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "190",
+          "name": "Url",
+          "expressions": {
+            "$id": "191",
+            "Literal": "https://localhost:8010/api/request/reject/{{ Variables.Solicitud.RequestId }}"
+          }
+        },
+        {
+          "$id": "192",
+          "name": "Method",
+          "expressions": {
+            "$id": "193",
+            "Literal": "POST"
+          }
+        },
+        {
+          "$id": "194",
+          "name": "Content",
+          "expressions": {
+            "$id": "195"
+          }
+        },
+        {
+          "$id": "196",
+          "name": "ContentType",
+          "expressions": {
+            "$id": "197"
+          }
+        },
+        {
+          "$id": "198",
+          "name": "ReadContent",
+          "expressions": {
+            "$id": "199"
+          }
+        },
+        {
+          "$id": "200",
+          "name": "ResponseContentParserName",
+          "expressions": {
+            "$id": "201"
+          }
+        },
+        {
+          "$id": "202",
+          "name": "ResponseContentTargetType",
+          "expressions": {
+            "$id": "203"
+          }
+        },
+        {
+          "$id": "204",
+          "name": "SupportedStatusCodes",
+          "expressions": {
+            "$id": "205"
+          }
+        },
+        {
+          "$id": "206",
+          "name": "Authorization",
+          "expressions": {
+            "$id": "207"
+          }
+        },
+        {
+          "$id": "208",
+          "name": "RequestHeaders",
+          "expressions": {
+            "$id": "209"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    }
+  ],
+  "connections": [
+    {
+      "$id": "210",
+      "sourceActivityId": "d08ea47f-b83b-4ffe-850d-48c8fe6636b5",
+      "targetActivityId": "c4792c7f-ceff-4299-b1f1-52fbc23557a1",
+      "outcome": "Done"
+    },
+    {
+      "$id": "211",
+      "sourceActivityId": "4198fa95-970c-4817-9489-42841eacdf53",
+      "targetActivityId": "25858cc7-c72c-4fd7-ad98-74583cde461b",
+      "outcome": "Done"
+    },
+    {
+      "$id": "212",
+      "sourceActivityId": "25858cc7-c72c-4fd7-ad98-74583cde461b",
+      "targetActivityId": "fabd99b2-004c-47bb-8593-bca67554137e",
+      "outcome": "Done"
+    },
+    {
+      "$id": "213",
+      "sourceActivityId": "fabd99b2-004c-47bb-8593-bca67554137e",
+      "targetActivityId": "bec2dd54-007f-4959-8e3b-3d620419f5f6",
+      "outcome": "Approve"
+    },
+    {
+      "$id": "214",
+      "sourceActivityId": "fabd99b2-004c-47bb-8593-bca67554137e",
+      "targetActivityId": "69715237-90ae-41a0-a0b3-729eb9a90bc4",
+      "outcome": "Reject"
+    },
+    {
+      "$id": "215",
+      "sourceActivityId": "011fcb62-0771-4f60-95a0-d39770762aaf",
+      "targetActivityId": "928114fc-4a89-4337-9616-283f047cecf6",
+      "outcome": "Done"
+    },
+    {
+      "$id": "216",
+      "sourceActivityId": "3f61a335-ed5a-4837-81c2-66fd188d7008",
+      "targetActivityId": "928114fc-4a89-4337-9616-283f047cecf6",
+      "outcome": "Done"
+    },
+    {
+      "$id": "217",
+      "sourceActivityId": "fabd99b2-004c-47bb-8593-bca67554137e",
+      "targetActivityId": "45b77456-ed4b-470a-b822-7381c21c2418",
+      "outcome": "Remind"
+    },
+    {
+      "$id": "218",
+      "sourceActivityId": "c4792c7f-ceff-4299-b1f1-52fbc23557a1",
+      "targetActivityId": "73e850c1-b825-41e3-be67-223272bdd3f7",
+      "outcome": "Done"
+    },
+    {
+      "$id": "219",
+      "sourceActivityId": "928114fc-4a89-4337-9616-283f047cecf6",
+      "targetActivityId": "5905d170-615f-4f1e-9214-eca24329d022",
+      "outcome": "Done"
+    },
+    {
+      "$id": "220",
+      "sourceActivityId": "5905d170-615f-4f1e-9214-eca24329d022",
+      "targetActivityId": "f7ede012-ee9b-475e-8853-9fa27238e155",
+      "outcome": "Done"
+    },
+    {
+      "$id": "221",
+      "sourceActivityId": "45b77456-ed4b-470a-b822-7381c21c2418",
+      "targetActivityId": "a535cb5e-7ad5-4811-8c30-0a66f5bdf7a4",
+      "outcome": "Done"
+    },
+    {
+      "$id": "222",
+      "sourceActivityId": "a535cb5e-7ad5-4811-8c30-0a66f5bdf7a4",
+      "targetActivityId": "e59a9213-3e2b-47a6-b242-fac204bbc048",
+      "outcome": "False"
+    },
+    {
+      "$id": "223",
+      "sourceActivityId": "a535cb5e-7ad5-4811-8c30-0a66f5bdf7a4",
+      "targetActivityId": "7ca9f3cc-53e1-40ec-b317-aa82439f7691",
+      "outcome": "True"
+    },
+    {
+      "$id": "224",
+      "sourceActivityId": "e59a9213-3e2b-47a6-b242-fac204bbc048",
+      "targetActivityId": "45b77456-ed4b-470a-b822-7381c21c2418",
+      "outcome": "Done"
+    },
+    {
+      "$id": "225",
+      "sourceActivityId": "e02156f2-55a0-4051-896b-5e0805e28a26",
+      "targetActivityId": "4198fa95-970c-4817-9489-42841eacdf53",
+      "outcome": "Done"
+    },
+    {
+      "$id": "226",
+      "sourceActivityId": "73e850c1-b825-41e3-be67-223272bdd3f7",
+      "targetActivityId": "68a34cea-ce6b-4a30-8d2f-55bed773a9dc",
+      "outcome": "Done"
+    },
+    {
+      "$id": "227",
+      "sourceActivityId": "68a34cea-ce6b-4a30-8d2f-55bed773a9dc",
+      "targetActivityId": "74321f15-7865-4b4b-986b-adae3960c608",
+      "outcome": "Done"
+    },
+    {
+      "$id": "228",
+      "sourceActivityId": "74321f15-7865-4b4b-986b-adae3960c608",
+      "targetActivityId": "e02156f2-55a0-4051-896b-5e0805e28a26",
+      "outcome": "Done"
+    },
+    {
+      "$id": "229",
+      "sourceActivityId": "bec2dd54-007f-4959-8e3b-3d620419f5f6",
+      "targetActivityId": "2f3537f5-7c5a-414a-a41f-c6c3ac123d31",
+      "outcome": "Done"
+    },
+    {
+      "$id": "230",
+      "sourceActivityId": "2f3537f5-7c5a-414a-a41f-c6c3ac123d31",
+      "targetActivityId": "011fcb62-0771-4f60-95a0-d39770762aaf",
+      "outcome": "Done"
+    },
+    {
+      "$id": "231",
+      "sourceActivityId": "69715237-90ae-41a0-a0b3-729eb9a90bc4",
+      "targetActivityId": "92443440-fbf5-4c2f-b573-c9136adb3737",
+      "outcome": "Done"
+    },
+    {
+      "$id": "232",
+      "sourceActivityId": "92443440-fbf5-4c2f-b573-c9136adb3737",
+      "targetActivityId": "3f61a335-ed5a-4837-81c2-66fd188d7008",
+      "outcome": "Done"
+    }
+  ],
+  "id": "dfc17c07efee463392d1f33aff7168d4"
+}
