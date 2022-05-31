@@ -4,14 +4,16 @@ using FactoryApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FactoryApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220531162052_Add_Stock_to_RawMaterials")]
+    partial class Add_Stock_to_RawMaterials
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,12 +54,15 @@ namespace FactoryApp.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ApproveLink")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
+                    b.Property<bool?>("Approved")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("ApprovedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("AproveLink")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -71,6 +76,9 @@ namespace FactoryApp.Data.Migrations
                     b.Property<string>("RejectLink")
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
+
+                    b.Property<bool?>("Rejected")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("RejectedAt")
                         .HasColumnType("datetime2");

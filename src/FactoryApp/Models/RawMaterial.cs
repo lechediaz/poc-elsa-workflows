@@ -14,6 +14,9 @@ namespace FactoryApp.Models
 
         [MaxLength(300)]
         public string Description { get; set; }
+
+        [Required]
+        public double Stock { get; set; }
         #endregion
 
         #region Relations

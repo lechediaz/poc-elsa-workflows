@@ -1,8 +1,6 @@
 using FactoryApp.Data;
-using FactoryApp.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -27,7 +25,7 @@ namespace FactoryApp
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
-            services.AddScoped<ICreateRequestService, CreateRequestService>();
+            services.AddServices();
 
             services.AddControllersWithViews();
 

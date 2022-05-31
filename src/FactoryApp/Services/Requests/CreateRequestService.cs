@@ -7,13 +7,24 @@ using FactoryApp.Enums;
 using FactoryApp.Models;
 using FactoryApp.Services.Base;
 
-namespace FactoryApp.Services
+namespace FactoryApp.Services.Requests
 {
+    /// <summary>
+    /// Defines the method to create a request.
+    /// </summary>
     public interface ICreateRequestService
     {
-        Task<ServiceResult<int>> CreateRequestAsync(CreateRequestDto request);
+        /// <summary>
+        /// Allows to create a request.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>Service result.</returns>
+        Task<ServiceResult<int>> CreateAsync(CreateRequestDto request);
     }
 
+    /// <summary>
+    /// Implements the method to create a request.
+    /// </summary>
     public class CreateRequestService : ICreateRequestService
     {
         private readonly ApplicationDbContext dbContext;
@@ -23,7 +34,8 @@ namespace FactoryApp.Services
             this.dbContext = dbContext;
         }
 
-        public async Task<ServiceResult<int>> CreateRequestAsync(CreateRequestDto request)
+        /// <inheritdoc/>
+        public async Task<ServiceResult<int>> CreateAsync(CreateRequestDto request)
         {
             var result = new ServiceResult<int>();
 

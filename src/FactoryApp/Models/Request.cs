@@ -15,13 +15,11 @@ namespace FactoryApp.Models
         public DateTime CreatedAt { get; set; }
         public int CreatedById { get; set; }
         public int ReceiverId { get; set; }
-        public bool? Approved { get; set; }
         public DateTime? ApprovedAt { get; set; }
-        public bool? Rejected { get; set; }
         public DateTime? RejectedAt { get; set; }
-        
+
         [MaxLength(300)]
-        public string AproveLink { get; set; }
+        public string ApproveLink { get; set; }
 
         [MaxLength(300)]
         public string RejectLink { get; set; }

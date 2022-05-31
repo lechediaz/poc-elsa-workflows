@@ -39,6 +39,10 @@ namespace FactoryApp.Data
                 .HasForeignKey(k => k.ReceiverId)
                 .OnDelete(DeleteBehavior.NoAction)
                 .IsRequired();
+            
+            modelBuilder.Entity<RawMaterial>()
+                .Property(p => p.Stock)
+                .HasDefaultValue(0);
         }
     }
 }
