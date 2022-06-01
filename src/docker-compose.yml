@@ -29,6 +29,8 @@ services:
     build:
       context: FactoryApp
       dockerfile: Dockerfile
+      args:
+        ELSA_SERVER: "http://localhost:8011"
     container_name: FactoryApp
     command:
       [

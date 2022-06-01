@@ -2,6 +2,10 @@
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /source
 
+# Set react environment variables
+ARG ELSA_SERVER="http://localhost:5000"
+ENV REACT_APP_ELSA_SERVER=$ELSA_SERVER
+
 # Install NodeJs
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
 RUN apt-get install -y nodejs
