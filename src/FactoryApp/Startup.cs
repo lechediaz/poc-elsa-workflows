@@ -27,6 +27,12 @@ namespace FactoryApp
 
             services.AddServices();
 
+            services.AddCors(options =>
+                options.AddDefaultPolicy(
+                    policy => policy.WithOrigins("http://localhost:3000")
+                )
+            );
+
             services.AddControllersWithViews();
 
             // In production, the React files will be served from this directory
@@ -56,6 +62,11 @@ namespace FactoryApp
 
             app.UseRouting();
 
+            if (env.IsDevelopment())
+            {
+                app.UseCors();
+            }
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -69,7 +80,7 @@ namespace FactoryApp
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:3000");
                 }
             });
         }
