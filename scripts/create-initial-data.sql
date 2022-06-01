@@ -26,12 +26,12 @@ SET IDENTITY_INSERT RawMaterials ON;
 GO
 
 INSERT INTO RawMaterials
-  ([Id],[Name],[Description])
+  ([Id],[Name])
 VALUES
-  (1 ,'Arroz x1 lb.' ,'Grano.')
-  ,(2 ,'Huevos x12 Und.' ,'Docena de huevos.')
-  ,(3 ,'Cebolla x1 lb.' ,'Te puede hacer llorar.')
-  ,(4 ,'Carne de res x1 lb.' ,'Muy importante para el asado.');
+  (1 ,'Hierro x5 kg.')
+  ,(2 ,'Carbón x2 kg.')
+  ,(3 ,'Cemento x10 kg.')
+  ,(4 ,'Petróleo x5 gal.');
 GO
 
 SET IDENTITY_INSERT RawMaterials OFF;
