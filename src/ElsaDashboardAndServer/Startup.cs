@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Elsa;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
-using Elsa.Persistence.EntityFramework.Sqlite;
+using Elsa.Persistence.EntityFramework.SqlServer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -32,10 +32,12 @@ namespace ElsaDashboardAndServer
         {
             var elsaSection = Configuration.GetSection("Elsa");
 
+            string connectionString = Configuration.GetConnectionString("ElsaDbContext");
+
             // Elsa services.
             services
                 .AddElsa(elsa => elsa
-                    .UseEntityFrameworkPersistence(ef => ef.UseSqlite())
+                    .UseEntityFrameworkPersistence(ef => ef.UseSqlServer(connectionString))
                     .AddConsoleActivities()
                     .AddHttpActivities(elsaSection.GetSection("Server").Bind)
                     .AddEmailActivities(elsaSection.GetSection("Smtp").Bind)

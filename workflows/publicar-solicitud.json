@@ -1,7 +1,7 @@
 {
   "$id": "1",
-  "definitionId": "50bdb362799d4960899ec15b7ecb1388",
-  "versionId": "dfc17c07efee463392d1f33aff7168d4",
+  "definitionId": "3d5d110fda584a0491ac6336d389c22f",
+  "versionId": "777a2ee476594fc184c3f2be77af7039",
   "name": "PublicarSolicitud",
   "displayName": "Publicación y Aprobación de Solicitudes",
   "description": "Flujo de aprobación de solicitudes para integrar Elsa a una API.",
@@ -456,7 +456,7 @@
           "syntax": "JavaScript",
           "expressions": {
             "$id": "91",
-            "JavaScript": "Duration.FromMinutes(1)"
+            "JavaScript": "Duration.FromMinutes(5)"
           }
         }
       ],
@@ -704,6 +704,7 @@
       "$id": "137",
       "activityId": "e02156f2-55a0-4051-896b-5e0805e28a26",
       "type": "SendHttpRequest",
+      "name": "PublishRequest",
       "displayName": "Publicar solicitud desde API",
       "persistWorkflow": false,
       "loadWorkflowContext": false,
@@ -714,7 +715,7 @@
           "name": "Url",
           "expressions": {
             "$id": "139",
-            "Literal": "https://localhost:8010/api/request/publish"
+            "Literal": "http://FactoryApp/api/request/publish"
           }
         },
         {
@@ -731,7 +732,7 @@
           "syntax": "Liquid",
           "expressions": {
             "$id": "143",
-            "Liquid": "{\r\n    \"RequestId\": {{ Variables.Solicitud.RequestId }},\r\n    \"ApproveLink\": \"{{ Variables.ApproveLink }}\",\r\n    \"RejectLink\": \"{{ RejectLink }}\"\r\n}"
+            "Liquid": "{\r\n    \"RequestId\": {{ Variables.Solicitud.RequestId }},\r\n    \"ApproveLink\": \"{{ Variables.ApproveLink }}\",\r\n    \"RejectLink\": \"{{ Variables.RejectLink }}\"\r\n}"
           }
         },
         {
@@ -746,14 +747,16 @@
           "$id": "146",
           "name": "ReadContent",
           "expressions": {
-            "$id": "147"
+            "$id": "147",
+            "Literal": "true"
           }
         },
         {
           "$id": "148",
           "name": "ResponseContentParserName",
           "expressions": {
-            "$id": "149"
+            "$id": "149",
+            "Literal": ""
           }
         },
         {
@@ -767,7 +770,8 @@
           "$id": "152",
           "name": "SupportedStatusCodes",
           "expressions": {
-            "$id": "153"
+            "$id": "153",
+            "Json": "[\"200\"]"
           }
         },
         {
@@ -836,9 +840,11 @@
         {
           "$id": "166",
           "name": "Value",
+          "syntax": "Liquid",
           "expressions": {
             "$id": "167",
-            "Literal": "{{ \"Reject\" | signal_url }}"
+            "Literal": "",
+            "Liquid": "{{ \"Reject\" | signal_url }}"
           }
         }
       ],
@@ -848,6 +854,7 @@
       "$id": "168",
       "activityId": "2f3537f5-7c5a-414a-a41f-c6c3ac123d31",
       "type": "SendHttpRequest",
+      "name": "ApproveRequest",
       "displayName": "Aprobar solicitud desde API",
       "persistWorkflow": false,
       "loadWorkflowContext": false,
@@ -861,7 +868,7 @@
             "$id": "170",
             "Literal": "https://localhost:8010/api/request/approve",
             "JavaScript": "https://localhost:8010/api/request/approve",
-            "Liquid": "https://localhost:8010/api/request/approve/{{ Variables.Solicitud.RequestId }}"
+            "Liquid": "http://FactoryApp/api/request/approve/{{ Variables.Solicitud.RequestId }}"
           }
         },
         {
@@ -890,14 +897,16 @@
           "$id": "177",
           "name": "ReadContent",
           "expressions": {
-            "$id": "178"
+            "$id": "178",
+            "Literal": "true"
           }
         },
         {
           "$id": "179",
           "name": "ResponseContentParserName",
           "expressions": {
-            "$id": "180"
+            "$id": "180",
+            "Literal": ""
           }
         },
         {
@@ -911,7 +920,8 @@
           "$id": "183",
           "name": "SupportedStatusCodes",
           "expressions": {
-            "$id": "184"
+            "$id": "184",
+            "Json": "[\"200\"]"
           }
         },
         {
@@ -935,6 +945,7 @@
       "$id": "189",
       "activityId": "92443440-fbf5-4c2f-b573-c9136adb3737",
       "type": "SendHttpRequest",
+      "name": "RejectRequest",
       "displayName": "Rechazar solicitud desde API",
       "persistWorkflow": false,
       "loadWorkflowContext": false,
@@ -943,9 +954,11 @@
         {
           "$id": "190",
           "name": "Url",
+          "syntax": "Liquid",
           "expressions": {
             "$id": "191",
-            "Literal": "https://localhost:8010/api/request/reject/{{ Variables.Solicitud.RequestId }}"
+            "Literal": "",
+            "Liquid": "http://FactoryApp/api/request/reject/{{ Variables.Solicitud.RequestId }}"
           }
         },
         {
@@ -974,14 +987,16 @@
           "$id": "198",
           "name": "ReadContent",
           "expressions": {
-            "$id": "199"
+            "$id": "199",
+            "Literal": "true"
           }
         },
         {
           "$id": "200",
           "name": "ResponseContentParserName",
           "expressions": {
-            "$id": "201"
+            "$id": "201",
+            "Literal": ""
           }
         },
         {
@@ -995,7 +1010,8 @@
           "$id": "204",
           "name": "SupportedStatusCodes",
           "expressions": {
-            "$id": "205"
+            "$id": "205",
+            "Json": "[\"200\"]"
           }
         },
         {
@@ -1014,147 +1030,315 @@
         }
       ],
       "propertyStorageProviders": {}
+    },
+    {
+      "$id": "210",
+      "activityId": "db65925f-cf1e-494c-bf04-d08d6a6c44fc",
+      "type": "WriteHttpResponse",
+      "displayName": "HTTP Response",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "211",
+          "name": "Content",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "212",
+            "JavaScript": "activities.PublishRequest.ResponseContent()"
+          }
+        },
+        {
+          "$id": "213",
+          "name": "ContentType",
+          "expressions": {
+            "$id": "214",
+            "Literal": "application/json"
+          }
+        },
+        {
+          "$id": "215",
+          "name": "StatusCode",
+          "expressions": {
+            "$id": "216"
+          }
+        },
+        {
+          "$id": "217",
+          "name": "CharSet",
+          "expressions": {
+            "$id": "218"
+          }
+        },
+        {
+          "$id": "219",
+          "name": "ResponseHeaders",
+          "expressions": {
+            "$id": "220"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "221",
+      "activityId": "8a1d771a-0b31-4bbf-bb70-476297834fdb",
+      "type": "WriteHttpResponse",
+      "displayName": "HTTP Response",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "222",
+          "name": "Content",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "223",
+            "JavaScript": "activities.ApproveRequest.ResponseContent()"
+          }
+        },
+        {
+          "$id": "224",
+          "name": "ContentType",
+          "expressions": {
+            "$id": "225",
+            "Literal": "application/json"
+          }
+        },
+        {
+          "$id": "226",
+          "name": "StatusCode",
+          "expressions": {
+            "$id": "227"
+          }
+        },
+        {
+          "$id": "228",
+          "name": "CharSet",
+          "expressions": {
+            "$id": "229"
+          }
+        },
+        {
+          "$id": "230",
+          "name": "ResponseHeaders",
+          "expressions": {
+            "$id": "231"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "232",
+      "activityId": "8dafc3ff-3d9d-4b7e-8709-c5e0bc97187e",
+      "type": "WriteHttpResponse",
+      "displayName": "HTTP Response",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "233",
+          "name": "Content",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "234",
+            "JavaScript": "activities.RejectRequest.ResponseContent()"
+          }
+        },
+        {
+          "$id": "235",
+          "name": "ContentType",
+          "expressions": {
+            "$id": "236",
+            "Literal": "application/json"
+          }
+        },
+        {
+          "$id": "237",
+          "name": "StatusCode",
+          "expressions": {
+            "$id": "238"
+          }
+        },
+        {
+          "$id": "239",
+          "name": "CharSet",
+          "expressions": {
+            "$id": "240"
+          }
+        },
+        {
+          "$id": "241",
+          "name": "ResponseHeaders",
+          "expressions": {
+            "$id": "242"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
     }
   ],
   "connections": [
     {
-      "$id": "210",
+      "$id": "243",
       "sourceActivityId": "d08ea47f-b83b-4ffe-850d-48c8fe6636b5",
       "targetActivityId": "c4792c7f-ceff-4299-b1f1-52fbc23557a1",
       "outcome": "Done"
     },
     {
-      "$id": "211",
+      "$id": "244",
       "sourceActivityId": "4198fa95-970c-4817-9489-42841eacdf53",
       "targetActivityId": "25858cc7-c72c-4fd7-ad98-74583cde461b",
       "outcome": "Done"
     },
     {
-      "$id": "212",
+      "$id": "245",
       "sourceActivityId": "25858cc7-c72c-4fd7-ad98-74583cde461b",
       "targetActivityId": "fabd99b2-004c-47bb-8593-bca67554137e",
       "outcome": "Done"
     },
     {
-      "$id": "213",
+      "$id": "246",
       "sourceActivityId": "fabd99b2-004c-47bb-8593-bca67554137e",
       "targetActivityId": "bec2dd54-007f-4959-8e3b-3d620419f5f6",
       "outcome": "Approve"
     },
     {
-      "$id": "214",
+      "$id": "247",
       "sourceActivityId": "fabd99b2-004c-47bb-8593-bca67554137e",
       "targetActivityId": "69715237-90ae-41a0-a0b3-729eb9a90bc4",
       "outcome": "Reject"
     },
     {
-      "$id": "215",
+      "$id": "248",
       "sourceActivityId": "011fcb62-0771-4f60-95a0-d39770762aaf",
       "targetActivityId": "928114fc-4a89-4337-9616-283f047cecf6",
       "outcome": "Done"
     },
     {
-      "$id": "216",
+      "$id": "249",
       "sourceActivityId": "3f61a335-ed5a-4837-81c2-66fd188d7008",
       "targetActivityId": "928114fc-4a89-4337-9616-283f047cecf6",
       "outcome": "Done"
     },
     {
-      "$id": "217",
+      "$id": "250",
       "sourceActivityId": "fabd99b2-004c-47bb-8593-bca67554137e",
       "targetActivityId": "45b77456-ed4b-470a-b822-7381c21c2418",
       "outcome": "Remind"
     },
     {
-      "$id": "218",
+      "$id": "251",
       "sourceActivityId": "c4792c7f-ceff-4299-b1f1-52fbc23557a1",
       "targetActivityId": "73e850c1-b825-41e3-be67-223272bdd3f7",
       "outcome": "Done"
     },
     {
-      "$id": "219",
+      "$id": "252",
       "sourceActivityId": "928114fc-4a89-4337-9616-283f047cecf6",
       "targetActivityId": "5905d170-615f-4f1e-9214-eca24329d022",
       "outcome": "Done"
     },
     {
-      "$id": "220",
+      "$id": "253",
       "sourceActivityId": "5905d170-615f-4f1e-9214-eca24329d022",
       "targetActivityId": "f7ede012-ee9b-475e-8853-9fa27238e155",
       "outcome": "Done"
     },
     {
-      "$id": "221",
+      "$id": "254",
       "sourceActivityId": "45b77456-ed4b-470a-b822-7381c21c2418",
       "targetActivityId": "a535cb5e-7ad5-4811-8c30-0a66f5bdf7a4",
       "outcome": "Done"
     },
     {
-      "$id": "222",
+      "$id": "255",
       "sourceActivityId": "a535cb5e-7ad5-4811-8c30-0a66f5bdf7a4",
       "targetActivityId": "e59a9213-3e2b-47a6-b242-fac204bbc048",
       "outcome": "False"
     },
     {
-      "$id": "223",
+      "$id": "256",
       "sourceActivityId": "a535cb5e-7ad5-4811-8c30-0a66f5bdf7a4",
       "targetActivityId": "7ca9f3cc-53e1-40ec-b317-aa82439f7691",
       "outcome": "True"
     },
     {
-      "$id": "224",
+      "$id": "257",
       "sourceActivityId": "e59a9213-3e2b-47a6-b242-fac204bbc048",
       "targetActivityId": "45b77456-ed4b-470a-b822-7381c21c2418",
       "outcome": "Done"
     },
     {
-      "$id": "225",
-      "sourceActivityId": "e02156f2-55a0-4051-896b-5e0805e28a26",
-      "targetActivityId": "4198fa95-970c-4817-9489-42841eacdf53",
-      "outcome": "Done"
-    },
-    {
-      "$id": "226",
+      "$id": "258",
       "sourceActivityId": "73e850c1-b825-41e3-be67-223272bdd3f7",
       "targetActivityId": "68a34cea-ce6b-4a30-8d2f-55bed773a9dc",
       "outcome": "Done"
     },
     {
-      "$id": "227",
+      "$id": "259",
       "sourceActivityId": "68a34cea-ce6b-4a30-8d2f-55bed773a9dc",
       "targetActivityId": "74321f15-7865-4b4b-986b-adae3960c608",
       "outcome": "Done"
     },
     {
-      "$id": "228",
+      "$id": "260",
       "sourceActivityId": "74321f15-7865-4b4b-986b-adae3960c608",
       "targetActivityId": "e02156f2-55a0-4051-896b-5e0805e28a26",
       "outcome": "Done"
     },
     {
-      "$id": "229",
+      "$id": "261",
       "sourceActivityId": "bec2dd54-007f-4959-8e3b-3d620419f5f6",
       "targetActivityId": "2f3537f5-7c5a-414a-a41f-c6c3ac123d31",
       "outcome": "Done"
     },
     {
-      "$id": "230",
-      "sourceActivityId": "2f3537f5-7c5a-414a-a41f-c6c3ac123d31",
-      "targetActivityId": "011fcb62-0771-4f60-95a0-d39770762aaf",
-      "outcome": "Done"
-    },
-    {
-      "$id": "231",
+      "$id": "262",
       "sourceActivityId": "69715237-90ae-41a0-a0b3-729eb9a90bc4",
       "targetActivityId": "92443440-fbf5-4c2f-b573-c9136adb3737",
       "outcome": "Done"
     },
     {
-      "$id": "232",
+      "$id": "263",
+      "sourceActivityId": "e02156f2-55a0-4051-896b-5e0805e28a26",
+      "targetActivityId": "4198fa95-970c-4817-9489-42841eacdf53",
+      "outcome": "200"
+    },
+    {
+      "$id": "264",
+      "sourceActivityId": "e02156f2-55a0-4051-896b-5e0805e28a26",
+      "targetActivityId": "db65925f-cf1e-494c-bf04-d08d6a6c44fc",
+      "outcome": "Unsupported Status Code"
+    },
+    {
+      "$id": "265",
+      "sourceActivityId": "2f3537f5-7c5a-414a-a41f-c6c3ac123d31",
+      "targetActivityId": "011fcb62-0771-4f60-95a0-d39770762aaf",
+      "outcome": "200"
+    },
+    {
+      "$id": "266",
       "sourceActivityId": "92443440-fbf5-4c2f-b573-c9136adb3737",
       "targetActivityId": "3f61a335-ed5a-4837-81c2-66fd188d7008",
-      "outcome": "Done"
+      "outcome": "200"
+    },
+    {
+      "$id": "267",
+      "sourceActivityId": "2f3537f5-7c5a-414a-a41f-c6c3ac123d31",
+      "targetActivityId": "8a1d771a-0b31-4bbf-bb70-476297834fdb",
+      "outcome": "Unsupported Status Code"
+    },
+    {
+      "$id": "268",
+      "sourceActivityId": "92443440-fbf5-4c2f-b573-c9136adb3737",
+      "targetActivityId": "8dafc3ff-3d9d-4b7e-8709-c5e0bc97187e",
+      "outcome": "Unsupported Status Code"
     }
   ],
-  "id": "dfc17c07efee463392d1f33aff7168d4"
+  "id": "777a2ee476594fc184c3f2be77af7039"
 }

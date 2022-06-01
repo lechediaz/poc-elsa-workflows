@@ -59,7 +59,7 @@ services:
     command:
       [
         "./wait-for-it.sh",
-        "FactoryApp:80",
+        "FactorySqlServer:1433",
         "-t",
         "120",
         "--",
@@ -67,12 +67,13 @@ services:
         "ElsaDashboardAndServer.dll"
       ]
     depends_on:
-      - app
+      - db
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ASPNETCORE_URLS: "http://+:80"
+      ConnectionStrings__ElsaDbContext: "Server=FactorySqlServer;database=ElsaDb;User Id=SA;Password=Cal1forn!cat_on"
       Elsa__Server__BaseUrl: "http://localhost:8011"
-      Elsa__Smtp__Host: "localhost"
+      Elsa__Smtp__Host: "FakeSmtpServer"
       Elsa__Smtp__Port: "1025"
       Elsa__Smtp__DefaultSender: "oscartest@fakemail.com"
       Elsa__Smtp__SecureSocketOptions: 0
