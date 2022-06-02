@@ -23,6 +23,11 @@ class _UserSessionService {
       this.userSession.next(userSession);
     }
   }
+
+  logOut() {
+    localStorage.removeItem(STORAGE.USER_SESION);
+    this.userSession.next(null);
+  }
 }
 
 export const UserSessionService = new _UserSessionService();

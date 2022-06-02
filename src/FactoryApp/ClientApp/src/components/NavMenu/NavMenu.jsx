@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../constants';
+import { UserSessionService } from '../../services';
 import './NavMenu.css';
 
 export class NavMenu extends Component {
@@ -22,6 +23,10 @@ export class NavMenu extends Component {
     });
   }
 
+  onLogoutClick = () => {
+    UserSessionService.logOut();
+  }
+
   render () {
     return (
       <header>
@@ -39,6 +44,9 @@ export class NavMenu extends Component {
                 </NavItem>
                 <NavItem>
                   <NavLink tag={Link} className="text-dark" to={ROUTES.REQUESTS}>Solicitudes</NavLink>
+                </NavItem>
+                <NavItem>
+                  <button className='btn btn-outline-danger' onClick={this.onLogoutClick}>Cerrar sesión</button>
                 </NavItem>
               </ul>
             </Collapse>
