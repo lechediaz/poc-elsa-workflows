@@ -24,6 +24,7 @@ namespace FactoryApp.Dtos
 
     public class DetailInViewRequestDto
     {
+        public int RawMaterialId { get; set; }
         public string Name { get; set; }
         public double Quantity { get; set; }
     }

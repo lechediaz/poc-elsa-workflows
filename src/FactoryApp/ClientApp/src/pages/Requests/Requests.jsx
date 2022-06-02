@@ -34,7 +34,7 @@ export const Requests = () => {
   }, []);
 
   const onNewRequestClick = () => {
-    history.push(ROUTES.NEW_REQUESTS);
+    history.push(ROUTES.NEW_REQUEST);
   };
 
   const onViewRequestClick = (requstId) => {

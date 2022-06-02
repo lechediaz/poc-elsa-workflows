@@ -1,7 +1,7 @@
 import { API } from './servers';
 
 // Request
-export const USER_REQUESTS = `${API}/api/request/all-from-user/{userId}`;
+export const USER_REQUESTS = `${API}/api/request/from-user/{userId}`;
 export const CREATE_REQUEST = `${API}/api/request/create`;
 export const REQUEST_BY_ID = `${API}/api/request/{requestId}`;
 

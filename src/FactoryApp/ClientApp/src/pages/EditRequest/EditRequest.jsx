@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { Alert, Table } from 'reactstrap';
+
+// Contants
 import { ROUTES } from '../../constants';
+
+// Services
 import {
   RawMaterialsListService,
   RequestService,
   SessionService,
 } from '../../services';
 
-export const NewRequest = () => {
+export const EditRequest = () => {
   const history = useHistory();
+  const { id } = useParams();
   const [details, setDetails] = useState({});
   const [rawMaterialIdSelected, setRawMaterialIdSelected] = useState('');
   const [quantity, setQuantity] = useState('0');
+  const [makeRawMatarialsListRequest, setMakeRawMatarialsListRequest] =
+    useState(false);
   const [rawMaterialsList, setRawMaterialsList] = useState([]);
   const [rawMaterials, setRawMaterials] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
@@ -21,12 +28,29 @@ export const NewRequest = () => {
   const detailsArray = Object.values(details);
 
   useEffect(() => {
-    RawMaterialsListService.getRawMaterialsList()
-      .then((_rawMaterialsList) => {
-        setRawMaterialsList(_rawMaterialsList);
-        setRawMaterials(_rawMaterialsList);
-      })
-      .catch(() => console.log('error'));
+    if (id !== undefined) {
+      RequestService.getRequestById(id)
+        .then((response) => {
+          const request = response.data;
+          const newDetails = request.details.reduce(
+            (prev, curr) => ({
+              ...prev,
+              [curr.rawMaterialId]: {
+                RawMaterialId: curr.rawMaterialId,
+                Name: curr.name,
+                Quantity: curr.quantity,
+              },
+            }),
+            {}
+          );
+
+          setDetails(newDetails);
+          setMakeRawMatarialsListRequest(true);
+        })
+        .catch(() => console.log('error'));
+    } else {
+      setMakeRawMatarialsListRequest(true);
+    }
 
     const subscription = SessionService.userSession.subscribe((_userSession) =>
       setUserSession(_userSession)
@@ -36,6 +60,26 @@ export const NewRequest = () => {
       subscription.unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    if (makeRawMatarialsListRequest) {
+      RawMaterialsListService.getRawMaterialsList()
+        .then((_rawMaterialsList) => {
+          if (id !== undefined) {
+            const detailsKeys = Object.keys(details);
+
+            _rawMaterialsList = _rawMaterialsList.filter(
+              (r) => !detailsKeys.includes(String(r.id))
+            );
+          }
+
+          setRawMaterialsList(_rawMaterialsList);
+          setRawMaterials(_rawMaterialsList);
+          setMakeRawMatarialsListRequest(false);
+        })
+        .catch(() => console.log('error'));
+    }
+  }, [makeRawMatarialsListRequest]);
 
   const onRawMaterialSelected = (event) => {
     const selectedId = event.target.value;
@@ -99,11 +143,13 @@ export const NewRequest = () => {
       }),
     };
 
-    RequestService.createRequest(request)
-      .then(() => {
-        history.push(ROUTES.REQUESTS);
-      })
-      .catch(() => console.log('error'));
+    if (id === undefined) {
+      RequestService.createRequest(request)
+        .then(() => {
+          history.push(ROUTES.REQUESTS);
+        })
+        .catch(() => console.log('error'));
+    }
   };
 
   return (
@@ -198,4 +244,4 @@ export const NewRequest = () => {
   );
 };
 
-export default NewRequest;
+export default EditRequest;

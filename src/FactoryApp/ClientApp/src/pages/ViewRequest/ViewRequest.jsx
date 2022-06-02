@@ -37,6 +37,11 @@ export const ViewRequest = () => {
       .catch(() => console.log('error'));
   };
 
+  const onEditClick = () => {
+    const url = ROUTES.EDIT_REQUEST.replace(':id', id);
+    history.push(url);
+  };
+
   return (
     <div>
       <h2>Solicitud {id}</h2>
@@ -95,8 +100,13 @@ export const ViewRequest = () => {
           </Table>
 
           {request.status === 0 && (
-            <button className="btn btn-primary" onClick={onPublishClick}>
+            <button className="btn btn-primary mr-2" onClick={onPublishClick}>
               Publicar
+            </button>
+          )}
+          {request.status === 0 && (
+            <button className="btn btn-warning" onClick={onEditClick}>
+              Editar
             </button>
           )}
         </React.Fragment>

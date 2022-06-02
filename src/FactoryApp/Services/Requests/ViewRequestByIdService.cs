@@ -59,6 +59,7 @@ namespace FactoryApp.Services.Requests
                 CreatedAt = request.CreatedAt,
                 Details = request.Details.Select(d => new DetailInViewRequestDto()
                 {
+                    RawMaterialId = d.RawMaterialId,
                     Name = d.RawMaterial.Name,
                     Quantity = d.Quantity
                 }),

@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FactoryApp.Dtos;
 using FactoryApp.Enums;
-using FactoryApp.Models;
 using FactoryApp.Services.Base;
 using FactoryApp.Services.Requests;
 using Microsoft.AspNetCore.Mvc;
@@ -36,7 +35,7 @@ namespace FactoryApp.Controllers
             this.rejectRequestService = rejectRequestService;
         }
 
-        [HttpGet("all-from-user/{userId:int}")]
+        [HttpGet("from-user/{userId:int}")]
         public async Task<ActionResult<IEnumerable<UserRequestDto>>> GetAllFromuser(
             [FromRoute] int userId,
             [FromQuery] RequestStatus? status = null)

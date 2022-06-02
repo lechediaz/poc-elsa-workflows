@@ -4,7 +4,7 @@ import { ProtectedRoute } from './components';
 import {
   ChooseUser,
   Home,
-  NewRequest,
+  EditRequest,
   RawMaterials,
   Requests,
   ViewRequest,
@@ -42,9 +42,9 @@ export default class App extends Component {
             <Requests />
           </ProtectedRoute>
         </Route>
-        <Route exact path={ROUTES.NEW_REQUESTS}>
+        <Route exact path={[ROUTES.NEW_REQUEST, ROUTES.EDIT_REQUEST]}>
           <ProtectedRoute>
-            <NewRequest />
+            <EditRequest />
           </ProtectedRoute>
         </Route>
         <Route exact path={ROUTES.VIEW_REQUEST}>
