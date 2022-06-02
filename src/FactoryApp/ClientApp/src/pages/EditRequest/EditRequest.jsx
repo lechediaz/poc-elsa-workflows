@@ -65,6 +65,8 @@ export const EditRequest = () => {
     if (makeRawMatarialsListRequest) {
       RawMaterialsListService.getRawMaterialsList()
         .then((_rawMaterialsList) => {
+          setRawMaterialsList(_rawMaterialsList);
+
           if (id !== undefined) {
             const detailsKeys = Object.keys(details);
 
@@ -73,7 +75,6 @@ export const EditRequest = () => {
             );
           }
 
-          setRawMaterialsList(_rawMaterialsList);
           setRawMaterials(_rawMaterialsList);
           setMakeRawMatarialsListRequest(false);
         })
