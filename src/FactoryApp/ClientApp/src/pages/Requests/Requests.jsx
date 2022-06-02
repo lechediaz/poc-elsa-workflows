@@ -4,6 +4,7 @@ import { Table } from 'reactstrap';
 import { filter } from 'rxjs';
 import { ROUTES } from '../../constants';
 import { RequestService, UserSessionService } from '../../services';
+import { getStatusName } from '../../utils';
 
 export const Requests = () => {
   const history = useHistory();
@@ -16,24 +17,7 @@ export const Requests = () => {
         RequestService.getUserRequests(String(_userSession.id))
           .then((response) => {
             const _request = response.data.map((r) => {
-              let statusName = '';
-
-              switch (r.status) {
-                case 1:
-                  statusName = 'Publicada';
-                  break;
-                case 2:
-                  statusName = 'Aprobada';
-                  break;
-                case 3:
-                  statusName = 'Rechazada';
-                  break;
-
-                default:
-                  statusName = 'Borrador';
-                  break;
-              }
-
+              const statusName = getStatusName(r.status);
               const newRequest = { ...r, statusName };
 
               return newRequest;
@@ -51,6 +35,11 @@ export const Requests = () => {
 
   const onNewRequestClick = () => {
     history.push(ROUTES.NEW_REQUESTS);
+  };
+
+  const onViewRequestClick = (requstId) => {
+    const url = ROUTES.VIEW_REQUEST.replace(':id', String(requstId));
+    history.push(url);
   };
 
   return (
@@ -90,7 +79,12 @@ export const Requests = () => {
                 <td>{request.statusName}</td>
                 <td>{request.totalItems}</td>
                 <td>
-                  <button className="btn btn-primary">Ver</button>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => onViewRequestClick(request.id)}
+                  >
+                    Ver
+                  </button>
                 </td>
               </tr>
             ))}

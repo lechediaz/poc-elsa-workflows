@@ -3,8 +3,14 @@ import { API_ROUTES } from '../../constants';
 
 class _RequestService {
   createRequest = (request) => axios.post(API_ROUTES.CREATE_REQUEST, request);
+
   getUserRequests = (userId) => {
     const url = API_ROUTES.USER_REQUESTS.replace('{userId}', userId);
+    return axios.get(url);
+  };
+
+  getRequestById = (requestId) => {
+    const url = API_ROUTES.REQUEST_BY_ID.replace('{requestId}', requestId);
     return axios.get(url);
   };
 }

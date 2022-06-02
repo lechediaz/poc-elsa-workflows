@@ -34,6 +34,13 @@ namespace ElsaDashboardAndServer
 
             string connectionString = Configuration.GetConnectionString("ElsaDbContext");
 
+            services.AddCors(options =>
+                options.AddDefaultPolicy(
+                    policy => policy.WithOrigins("http://localhost:3000", "http://localhost:8010")
+                        .AllowAnyHeader()
+                )
+            );
+
             // Elsa services.
             services
                 .AddElsa(elsa => elsa
@@ -64,6 +71,7 @@ namespace ElsaDashboardAndServer
                .UseStaticFiles() // For Dashboard.
                .UseHttpActivities()
                .UseRouting()
+               .UseCors()
                .UseEndpoints(endpoints =>
                {
                     // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.

@@ -27,6 +27,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IPublishRequestService, PublishRequestService>();
             services.AddScoped<IRejectRequestService, RejectRequestService>();
             services.AddScoped<IValidateRequestExistService, ValidateRequestExistService>();
+            services.AddScoped<IViewRequestByIdService, ViewRequestByIdService>();
             #endregion
 
             #region Users

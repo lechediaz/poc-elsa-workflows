@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FactoryApp.Dtos;
 using FactoryApp.Enums;
+using FactoryApp.Models;
 using FactoryApp.Services.Base;
 using FactoryApp.Services.Requests;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,7 @@ namespace FactoryApp.Controllers
         private readonly IApproveRequestService approveRequestService;
         private readonly ICreateRequestService createRequestService;
         private readonly IGetAllUserRequestsService getAllUserRequestsService;
+        private readonly IViewRequestByIdService viewRequestByIdService;
         private readonly IPublishRequestService publishRequestService;
         private readonly IRejectRequestService rejectRequestService;
 
@@ -22,12 +24,14 @@ namespace FactoryApp.Controllers
             IApproveRequestService approveRequestService,
             ICreateRequestService createRequestService,
             IGetAllUserRequestsService getAllUserRequestsService,
+            IViewRequestByIdService viewRequestByIdService,
             IPublishRequestService publishRequestService,
             IRejectRequestService rejectRequestService)
         {
             this.approveRequestService = approveRequestService;
             this.createRequestService = createRequestService;
             this.getAllUserRequestsService = getAllUserRequestsService;
+            this.viewRequestByIdService = viewRequestByIdService;
             this.publishRequestService = publishRequestService;
             this.rejectRequestService = rejectRequestService;
         }
@@ -38,6 +42,19 @@ namespace FactoryApp.Controllers
             [FromQuery] RequestStatus? status = null)
         {
             ServiceResult<IEnumerable<UserRequestDto>> result = await getAllUserRequestsService.GetAsync(userId, status);
+
+            if (result.Ok)
+            {
+                return Ok(result.Extras);
+            }
+
+            return Problem(result.Message);
+        }
+
+        [HttpGet("{requestId:int}")]
+        public async Task<ActionResult<ViewRequestDto>> GetById([FromRoute] int requestId)
+        {
+            ServiceResult<ViewRequestDto> result = await viewRequestByIdService.GetAsync(requestId);
 
             if (result.Ok)
             {

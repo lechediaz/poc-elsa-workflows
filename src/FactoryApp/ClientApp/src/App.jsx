@@ -1,7 +1,15 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router';
 import { ProtectedRoute } from './components';
-import { ChooseUser, Home, NewRequest, RawMaterials, Requests } from './pages';
+import {
+  ChooseUser,
+  Home,
+  NewRequest,
+  RawMaterials,
+  Requests,
+  ViewRequest,
+} from './pages';
+
 import { ROUTES } from './constants';
 
 // Services
@@ -37,6 +45,11 @@ export default class App extends Component {
         <Route exact path={ROUTES.NEW_REQUESTS}>
           <ProtectedRoute>
             <NewRequest />
+          </ProtectedRoute>
+        </Route>
+        <Route exact path={ROUTES.VIEW_REQUEST}>
+          <ProtectedRoute>
+            <ViewRequest />
           </ProtectedRoute>
         </Route>
         <Route exact path={ROUTES.CHOOSE_USER} component={ChooseUser} />
