@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { Alert, Table } from 'reactstrap';
+import swal from 'sweetalert';
 
 // Contants
 import { ROUTES } from '../../constants';
@@ -117,18 +118,29 @@ export const EditRequest = () => {
   };
 
   const onDiscardClick = (rawMaterialIdDiscarted) => {
-    const rawMaterialDiscarted = rawMaterialsList.find(
-      (m) => m.id == rawMaterialIdDiscarted
-    );
+    swal({
+      icon: 'warning',
+      text: 'Por favor confirme que desea descartar esta materia prima',
+      buttons: {
+        cancel: 'Cancelar',
+        confirm: 'Aceptar',
+      },
+    }).then((confirmed) => {
+      if (confirmed) {
+        const rawMaterialDiscarted = rawMaterialsList.find(
+          (m) => m.id == rawMaterialIdDiscarted
+        );
 
-    const newDetails = { ...details };
+        const newDetails = { ...details };
 
-    delete newDetails[rawMaterialIdDiscarted];
+        delete newDetails[rawMaterialIdDiscarted];
 
-    const newRawMaterials = [...rawMaterials, rawMaterialDiscarted];
+        const newRawMaterials = [...rawMaterials, rawMaterialDiscarted];
 
-    setDetails(newDetails);
-    setRawMaterials(newRawMaterials);
+        setDetails(newDetails);
+        setRawMaterials(newRawMaterials);
+      }
+    });
   };
 
   const onSaveRequestClick = () => {
@@ -156,8 +168,19 @@ export const EditRequest = () => {
     }
 
     httpRequest
+      .then(() =>
+        swal({
+          icon: 'success',
+          text: 'Solicitud guardada correctamente',
+          timer: 3000,
+        })
+      )
       .then(() => {
-        history.push(ROUTES.REQUESTS);
+        if (id === undefined) {
+          history.push(ROUTES.REQUESTS);
+        } else {
+          history.push(ROUTES.VIEW_REQUEST.replace(':id', id));
+        }
       })
       .catch(() => console.log('error'));
   };

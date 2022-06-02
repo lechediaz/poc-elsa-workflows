@@ -15,7 +15,8 @@
     "react-scripts": "^3.4.4",
     "reactstrap": "^8.4.1",
     "rimraf": "^2.6.2",
-    "rxjs": "^7.5.5"
+    "rxjs": "^7.5.5",
+    "sweetalert": "^2.1.2"
   },
   "devDependencies": {
     "ajv": "^6.9.1",

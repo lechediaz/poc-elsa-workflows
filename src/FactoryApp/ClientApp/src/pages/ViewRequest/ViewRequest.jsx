@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { Table } from 'reactstrap';
+import swal from 'sweetalert';
+
+// Contants
 import { ROUTES } from '../../constants';
+
+// Services
 import { ElsaService, RequestService } from '../../services';
+
+// Utils
 import { getStatusName } from '../../utils';
 
 export const ViewRequest = () => {
@@ -17,24 +24,35 @@ export const ViewRequest = () => {
   }, []);
 
   const onPublishClick = () => {
-    const info = {
-      RequestId: request.id,
-      Author: {
-        Name: request.createdBy.name,
-        Email: request.createdBy.email,
+    swal({
+      icon: 'warning',
+      text: 'Por favor confirme que desea publicar esta solicitud. Esto iniciará el flujo de aprobación.',
+      buttons: {
+        cancel: 'Cancelar',
+        confirm: 'Aceptar',
       },
-      Approver: {
-        Name: request.receiver.name,
-        Email: request.receiver.email,
-      },
-    };
+    }).then((confirmed) => {
+      if (confirmed) {
+        const info = {
+          RequestId: request.id,
+          Author: {
+            Name: request.createdBy.name,
+            Email: request.createdBy.email,
+          },
+          Approver: {
+            Name: request.receiver.name,
+            Email: request.receiver.email,
+          },
+        };
 
-    ElsaService.publishRequest(info)
-      .then(() => {
-        console.log('Good');
-        history.push(ROUTES.REQUESTS);
-      })
-      .catch(() => console.log('error'));
+        ElsaService.publishRequest(info)
+          .then(() => {
+            console.log('Good');
+            history.push(ROUTES.REQUESTS);
+          })
+          .catch(() => console.log('error'));
+      }
+    });
   };
 
   const onEditClick = () => {
