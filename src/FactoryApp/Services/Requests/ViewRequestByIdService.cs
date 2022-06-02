@@ -26,10 +26,14 @@ namespace FactoryApp.Services.Requests
     /// </summary>
     public class ViewRequestByIdService : IViewRequestByIdService
     {
+        private readonly IValidateRequestExistService validateRequestExistService;
         private readonly ApplicationDbContext dbContext;
 
-        public ViewRequestByIdService(ApplicationDbContext dbContext)
+        public ViewRequestByIdService(
+            IValidateRequestExistService validateRequestExistService,
+            ApplicationDbContext dbContext)
         {
+            this.validateRequestExistService = validateRequestExistService;
             this.dbContext = dbContext;
         }
 
@@ -37,6 +41,14 @@ namespace FactoryApp.Services.Requests
         public async Task<ServiceResult<ViewRequestDto>> GetAsync(int requestId)
         {
             var result = new ServiceResult<ViewRequestDto>();
+
+            ServiceResult<bool> validationResult = await validateRequestExistService.ExistsAsync(requestId);
+
+            if (!validationResult.Ok)
+            {
+                result.Message = validationResult.Message;
+                return result;
+            }
 
             IQueryable<Request> query = dbContext.Requests.Where(r => r.Id == requestId);
 

@@ -133,8 +133,6 @@ export const EditRequest = () => {
 
   const onSaveRequestClick = () => {
     const request = {
-      CreatedById: userSession.id,
-      ReceiverId: userSession.supervisorId || userSession.id,
       Details: detailsArray.map((d) => {
         const newDetail = { ...d };
 
@@ -144,13 +142,24 @@ export const EditRequest = () => {
       }),
     };
 
+    let httpRequest;
+
     if (id === undefined) {
-      RequestService.createRequest(request)
-        .then(() => {
-          history.push(ROUTES.REQUESTS);
-        })
-        .catch(() => console.log('error'));
+      request.CreatedById = userSession.id;
+      request.ReceiverId = userSession.supervisorId || userSession.id;
+
+      httpRequest = RequestService.createRequest(request);
+    } else {
+      request.id = id;
+
+      httpRequest = RequestService.editRequest(request);
     }
+
+    httpRequest
+      .then(() => {
+        history.push(ROUTES.REQUESTS);
+      })
+      .catch(() => console.log('error'));
   };
 
   return (

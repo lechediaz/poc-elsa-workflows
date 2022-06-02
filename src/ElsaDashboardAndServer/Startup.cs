@@ -38,6 +38,7 @@ namespace ElsaDashboardAndServer
                 options.AddDefaultPolicy(
                     policy => policy.WithOrigins("http://localhost:3000", "http://localhost:8010")
                         .AllowAnyHeader()
+                        .AllowAnyMethod()
                 )
             );
 
@@ -74,11 +75,11 @@ namespace ElsaDashboardAndServer
                .UseCors()
                .UseEndpoints(endpoints =>
                {
-                    // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.
-                    endpoints.MapControllers();
+                   // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.
+                   endpoints.MapControllers();
 
-                    // For Dashboard.
-                    endpoints.MapFallbackToPage("/_Host");
+                   // For Dashboard.
+                   endpoints.MapFallbackToPage("/_Host");
                });
         }
     }

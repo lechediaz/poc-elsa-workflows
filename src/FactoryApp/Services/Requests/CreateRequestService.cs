@@ -17,9 +17,9 @@ namespace FactoryApp.Services.Requests
         /// <summary>
         /// Allows to create a request.
         /// </summary>
-        /// <param name="request">The request.</param>
+        /// <param name="requestCreation">The request.</param>
         /// <returns>Service result.</returns>
-        Task<ServiceResult<int>> CreateAsync(CreateRequestDto request);
+        Task<ServiceResult<int>> CreateAsync(CreateRequestDto requestCreation);
     }
 
     /// <summary>
@@ -35,11 +35,11 @@ namespace FactoryApp.Services.Requests
         }
 
         /// <inheritdoc/>
-        public async Task<ServiceResult<int>> CreateAsync(CreateRequestDto request)
+        public async Task<ServiceResult<int>> CreateAsync(CreateRequestDto requestCreation)
         {
             var result = new ServiceResult<int>();
 
-            RequestDetail[] details = request.Details?.Select(d => new RequestDetail()
+            RequestDetail[] details = requestCreation.Details?.Select(d => new RequestDetail()
             {
                 Quantity = d.Quantity,
                 RawMaterialId = d.RawMaterialId
@@ -48,9 +48,9 @@ namespace FactoryApp.Services.Requests
             var newRequest = new Request()
             {
                 CreatedAt = DateTime.UtcNow,
-                CreatedById = request.CreatedById,
+                CreatedById = requestCreation.CreatedById,
                 Details = details,
-                ReceiverId = request.ReceiverId,
+                ReceiverId = requestCreation.ReceiverId,
                 Status = RequestStatus.Draft
             };
 

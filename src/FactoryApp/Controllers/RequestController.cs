@@ -14,6 +14,7 @@ namespace FactoryApp.Controllers
     {
         private readonly IApproveRequestService approveRequestService;
         private readonly ICreateRequestService createRequestService;
+        private readonly IEditRequestService editRequestService;
         private readonly IGetAllUserRequestsService getAllUserRequestsService;
         private readonly IViewRequestByIdService viewRequestByIdService;
         private readonly IPublishRequestService publishRequestService;
@@ -22,6 +23,7 @@ namespace FactoryApp.Controllers
         public RequestController(
             IApproveRequestService approveRequestService,
             ICreateRequestService createRequestService,
+            IEditRequestService editRequestService,
             IGetAllUserRequestsService getAllUserRequestsService,
             IViewRequestByIdService viewRequestByIdService,
             IPublishRequestService publishRequestService,
@@ -29,6 +31,7 @@ namespace FactoryApp.Controllers
         {
             this.approveRequestService = approveRequestService;
             this.createRequestService = createRequestService;
+            this.editRequestService = editRequestService;
             this.getAllUserRequestsService = getAllUserRequestsService;
             this.viewRequestByIdService = viewRequestByIdService;
             this.publishRequestService = publishRequestService;
@@ -36,7 +39,7 @@ namespace FactoryApp.Controllers
         }
 
         [HttpGet("from-user/{userId:int}")]
-        public async Task<ActionResult<IEnumerable<UserRequestDto>>> GetAllFromuser(
+        public async Task<ActionResult<IEnumerable<UserRequestDto>>> GetAllFromUser(
             [FromRoute] int userId,
             [FromQuery] RequestStatus? status = null)
         {
@@ -64,13 +67,26 @@ namespace FactoryApp.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<ActionResult<int>> Create(CreateRequestDto request)
+        public async Task<ActionResult<int>> Create(CreateRequestDto requestCreation)
         {
-            ServiceResult<int> result = await createRequestService.CreateAsync(request);
+            ServiceResult<int> result = await createRequestService.CreateAsync(requestCreation);
 
             if (result.Ok)
             {
                 return Ok(result.Extras);
+            }
+
+            return Problem(result.Message);
+        }
+
+        [HttpPut("edit")]
+        public async Task<ActionResult> Edit(EditRequestDto requestEdition)
+        {
+            ServiceResult result = await editRequestService.EditAsync(requestEdition);
+
+            if (result.Ok)
+            {
+                return Ok();
             }
 
             return Problem(result.Message);

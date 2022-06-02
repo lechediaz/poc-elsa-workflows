@@ -2,7 +2,11 @@ import axios from 'axios';
 import { API_ROUTES } from '../../constants';
 
 class _RequestService {
-  createRequest = (request) => axios.post(API_ROUTES.CREATE_REQUEST, request);
+  createRequest = (requestCreation) =>
+    axios.post(API_ROUTES.CREATE_REQUEST, requestCreation);
+
+  editRequest = (requestEdition) =>
+    axios.put(API_ROUTES.EDIT_REQUEST, requestEdition);
 
   getUserRequests = (userId) => {
     const url = API_ROUTES.USER_REQUESTS.replace('{userId}', userId);
