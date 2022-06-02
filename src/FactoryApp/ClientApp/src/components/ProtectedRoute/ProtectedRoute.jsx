@@ -4,19 +4,17 @@ import { Layout } from '..';
 import { ROUTES } from '../../constants';
 
 // Services
-import { UserSessionService } from '../../services';
+import { SessionService } from '../../services';
 
 export const ProtectedRoute = (props) => {
   const history = useHistory();
 
   useEffect(() => {
-    const subscription = UserSessionService.userSession.subscribe(
-      (userSession) => {
-        if (userSession === null) {
-          history.push(ROUTES.CHOOSE_USER);
-        }
+    const subscription = SessionService.userSession.subscribe((userSession) => {
+      if (userSession === null) {
+        history.push(ROUTES.CHOOSE_USER);
       }
-    );
+    });
 
     return () => {
       subscription.unsubscribe();

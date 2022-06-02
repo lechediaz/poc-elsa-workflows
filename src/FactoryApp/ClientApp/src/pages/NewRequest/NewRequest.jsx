@@ -5,7 +5,7 @@ import { ROUTES } from '../../constants';
 import {
   RawMaterialsListService,
   RequestService,
-  UserSessionService,
+  SessionService,
 } from '../../services';
 
 export const NewRequest = () => {
@@ -28,8 +28,8 @@ export const NewRequest = () => {
       })
       .catch(() => console.log('error'));
 
-    const subscription = UserSessionService.userSession.subscribe(
-      (_userSession) => setUserSession(_userSession)
+    const subscription = SessionService.userSession.subscribe((_userSession) =>
+      setUserSession(_userSession)
     );
 
     return () => {

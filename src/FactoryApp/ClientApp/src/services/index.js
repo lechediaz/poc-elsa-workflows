@@ -1,5 +1,5 @@
 export { ElsaService } from './ElsaService';
-export { RawMaterialsListService } from './RawMaterialsListService/RawMaterialsListService';
-export { RequestService } from './Request/RequestService';
-export { UserSessionService } from './UserSesionService/UserSessionService';
-export { UsersListService } from './UsersListService/UsersListService';
+export { RawMaterialsListService } from './RawMaterials/RawMaterialsListService';
+export { RequestService } from './Requests/RequestService';
+export { SessionService } from './SessionService';
+export { UsersListService } from './Users/UsersListService';

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../constants';
-import { UserSessionService } from '../../services';
+import { SessionService } from '../../services';
 import './NavMenu.css';
 
 export class NavMenu extends Component {
@@ -24,7 +24,7 @@ export class NavMenu extends Component {
   }
 
   onLogoutClick = () => {
-    UserSessionService.logOut();
+    SessionService.logOut();
   }
 
   render () {

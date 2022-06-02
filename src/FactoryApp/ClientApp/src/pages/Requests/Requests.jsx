@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { Table } from 'reactstrap';
 import { filter } from 'rxjs';
 import { ROUTES } from '../../constants';
-import { RequestService, UserSessionService } from '../../services';
+import { RequestService, SessionService } from '../../services';
 import { getStatusName } from '../../utils';
 
 export const Requests = () => {
@@ -11,7 +11,7 @@ export const Requests = () => {
   const [requests, setRequests] = useState([]);
 
   useEffect(() => {
-    const subscription = UserSessionService.userSession
+    const subscription = SessionService.userSession
       .pipe(filter((_userSession) => _userSession !== null))
       .subscribe((_userSession) => {
         RequestService.getUserRequests(String(_userSession.id))

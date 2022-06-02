@@ -1,7 +1,7 @@
 import { BehaviorSubject } from 'rxjs';
-import { STORAGE } from '../../constants';
+import { STORAGE } from '../constants';
 
-class _UserSessionService {
+class _SessionService {
   userSession = new BehaviorSubject(null);
 
   getUserSession() {
@@ -30,6 +30,6 @@ class _UserSessionService {
   }
 }
 
-export const UserSessionService = new _UserSessionService();
+export const SessionService = new _SessionService();
 
-export default UserSessionService;
+export default SessionService;

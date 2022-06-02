@@ -1,4 +1,4 @@
-import { API } from '../server/server';
+import { API } from './servers';
 
 // Request
 export const USER_REQUESTS = `${API}/api/request/all-from-user/{userId}`;

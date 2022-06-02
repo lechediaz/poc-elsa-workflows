@@ -3,7 +3,7 @@ import { useHistory } from 'react-router';
 import { ROUTES } from '../../constants';
 
 // Services
-import { UserSessionService, UsersListService } from '../../services';
+import { SessionService, UsersListService } from '../../services';
 
 import './ChooseUser.css';
 
@@ -13,13 +13,11 @@ export const ChooseUser = () => {
   const [userIdSelected, setUserIdSelected] = useState('');
 
   useEffect(() => {
-    const subscription = UserSessionService.userSession.subscribe(
-      (userSession) => {
-        if (userSession !== null) {
-          goToHome();
-        }
+    const subscription = SessionService.userSession.subscribe((userSession) => {
+      if (userSession !== null) {
+        goToHome();
       }
-    );
+    });
 
     UsersListService.getUsersList()
       .then((_usersList) => setUsersList(_usersList))
@@ -39,7 +37,7 @@ export const ChooseUser = () => {
 
   const onStartSessionClick = () => {
     const selectedUser = usersList.find((u) => u.id == userIdSelected);
-    UserSessionService.setUserSession(selectedUser);
+    SessionService.setUserSession(selectedUser);
     goToHome();
   };
 

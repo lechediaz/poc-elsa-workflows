@@ -13,7 +13,7 @@ import {
 import { ROUTES } from './constants';
 
 // Services
-import UserSessionService from './services/UserSesionService/UserSessionService';
+import { SessionService } from './services';
 
 import './custom.css';
 
@@ -21,7 +21,7 @@ export default class App extends Component {
   static displayName = App.name;
 
   componentDidMount() {
-    UserSessionService.getUserSession();
+    SessionService.getUserSession();
   }
 
   render() {
