@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { Layout } from '..';
+import { ROUTES } from '../../constants';
 
 // Services
 import { UserSessionService } from '../../services';
@@ -12,7 +13,7 @@ export const ProtectedRoute = (props) => {
     const subscription = UserSessionService.userSession.subscribe(
       (userSession) => {
         if (userSession === null) {
-          history.push('/choose-user');
+          history.push(ROUTES.CHOOSE_USER);
         }
       }
     );

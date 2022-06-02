@@ -40,7 +40,8 @@ namespace FactoryApp.Services.RawMaterials
                 {
                     Id = r.Id,
                     Name = r.Name,
-                    Description = r.Description
+                    Description = r.Description,
+                    Stock = r.Stock
                 })
                 .ToListAsync();
 

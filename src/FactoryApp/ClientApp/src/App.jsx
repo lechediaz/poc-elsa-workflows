@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router';
 import { ProtectedRoute } from './components';
-import { ChooseUser, Home } from './pages';
+import { ChooseUser, Home, NewRequest, RawMaterials, Requests } from './pages';
+import { ROUTES } from './constants';
 
 // Services
 import UserSessionService from './services/UserSesionService/UserSessionService';
@@ -18,12 +19,27 @@ export default class App extends Component {
   render() {
     return (
       <Switch>
-        <Route exact path="/">
+        <Route exact path={ROUTES.HOME}>
           <ProtectedRoute>
             <Home />
           </ProtectedRoute>
         </Route>
-        <Route exact path="/choose-user" component={ChooseUser} />
+        <Route exact path={ROUTES.RAW_MATERIALS}>
+          <ProtectedRoute>
+            <RawMaterials />
+          </ProtectedRoute>
+        </Route>
+        <Route exact path={ROUTES.REQUESTS}>
+          <ProtectedRoute>
+            <Requests />
+          </ProtectedRoute>
+        </Route>
+        <Route exact path={ROUTES.NEW_REQUESTS}>
+          <ProtectedRoute>
+            <NewRequest />
+          </ProtectedRoute>
+        </Route>
+        <Route exact path={ROUTES.CHOOSE_USER} component={ChooseUser} />
       </Switch>
     );
   }

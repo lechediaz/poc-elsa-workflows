@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
+import { ROUTES } from '../../constants';
 
 // Services
 import { UserSessionService, UsersListService } from '../../services';
@@ -29,7 +30,7 @@ export const ChooseUser = () => {
     };
   }, []);
 
-  const goToHome = () => history.push('/');
+  const goToHome = () => history.push(ROUTES.HOME);
 
   const onUserSelected = (event) => {
     const selectedId = event.target.value;

@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { SERVER } from '../../constants';
+import { API_ROUTES } from '../../constants';
 
 class _UsersListService {
   async getUsersList() {
-    const response = await axios.get(`${SERVER.API}/api/user/list`);
+    const response = await axios.get(API_ROUTES.USERS_LIST);
     const usersList = response.data;
     return usersList;
   }
