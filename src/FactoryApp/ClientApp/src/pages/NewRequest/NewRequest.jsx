@@ -1,19 +1,40 @@
 import React, { useEffect, useState } from 'react';
-import { Alert } from 'reactstrap';
-import { RawMaterialsListService } from '../../services';
+import { useHistory } from 'react-router-dom';
+import { Alert, Table } from 'reactstrap';
+import { ROUTES } from '../../constants';
+import {
+  RawMaterialsListService,
+  RequestService,
+  UserSessionService,
+} from '../../services';
 
 export const NewRequest = () => {
+  const history = useHistory();
   const [details, setDetails] = useState({});
-  const [request, setRequest] = useState({});
   const [rawMaterialIdSelected, setRawMaterialIdSelected] = useState('');
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState('0');
+  const [rawMaterialsList, setRawMaterialsList] = useState([]);
   const [rawMaterials, setRawMaterials] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
+  const [userSession, setUserSession] = useState(null);
+
+  const detailsArray = Object.values(details);
 
   useEffect(() => {
     RawMaterialsListService.getRawMaterialsList()
-      .then((_rawMaterialsList) => setRawMaterials(_rawMaterialsList))
+      .then((_rawMaterialsList) => {
+        setRawMaterialsList(_rawMaterialsList);
+        setRawMaterials(_rawMaterialsList);
+      })
       .catch(() => console.log('error'));
+
+    const subscription = UserSessionService.userSession.subscribe(
+      (_userSession) => setUserSession(_userSession)
+    );
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const onRawMaterialSelected = (event) => {
@@ -23,15 +44,20 @@ export const NewRequest = () => {
 
   const onQuantityChanged = (event) => {
     const quantityString = event.target.value;
-    setQuantity(parseFloat(quantityString));
+    setQuantity(quantityString);
   };
 
   const onAddClick = () => {
+    const rawMaterialSelected = rawMaterials.find(
+      (m) => m.id == rawMaterialIdSelected
+    );
+
     const newDetails = {
       ...details,
       [rawMaterialIdSelected]: {
         RawMaterialId: rawMaterialIdSelected,
-        Quantity: quantity,
+        Name: rawMaterialSelected.name,
+        Quantity: parseFloat(quantity),
       },
     };
 
@@ -43,6 +69,41 @@ export const NewRequest = () => {
     setRawMaterials(newRawMaterials);
     setRawMaterialIdSelected('');
     setQuantity(0);
+  };
+
+  const onDiscardClick = (rawMaterialIdDiscarted) => {
+    const rawMaterialDiscarted = rawMaterialsList.find(
+      (m) => m.id == rawMaterialIdDiscarted
+    );
+
+    const newDetails = { ...details };
+
+    delete newDetails[rawMaterialIdDiscarted];
+
+    const newRawMaterials = [...rawMaterials, rawMaterialDiscarted];
+
+    setDetails(newDetails);
+    setRawMaterials(newRawMaterials);
+  };
+
+  const onSaveRequestClick = () => {
+    const request = {
+      CreatedById: userSession.id,
+      ReceiverId: userSession.SupervisorId || userSession.id,
+      Details: detailsArray.map((d) => {
+        const newDetail = { ...d };
+
+        delete newDetail['Name'];
+
+        return newDetail;
+      }),
+    };
+
+    RequestService.createRequest(request)
+      .then(() => {
+        history.push(ROUTES.REQUESTS);
+      })
+      .catch(() => console.log('error'));
   };
 
   return (
@@ -98,6 +159,41 @@ export const NewRequest = () => {
           </div>
         </div>
       </div>
+
+      <Table striped>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Cantidad a solicitar</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {detailsArray &&
+            detailsArray.map((material) => (
+              <tr key={`material-${material.RawMaterialId}`}>
+                <td>{material.Name}</td>
+                <td>{material.Quantity}</td>
+                <td>
+                  <button
+                    className="btn btn-warning"
+                    onClick={() => onDiscardClick(material.RawMaterialId)}
+                  >
+                    Descartar
+                  </button>
+                </td>
+              </tr>
+            ))}
+        </tbody>
+      </Table>
+
+      <button
+        disabled={detailsArray.length === 0}
+        className="btn btn-primary"
+        onClick={onSaveRequestClick}
+      >
+        Guardar solicitud
+      </button>
     </div>
   );
 };
