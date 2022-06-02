@@ -89,7 +89,7 @@ export const NewRequest = () => {
   const onSaveRequestClick = () => {
     const request = {
       CreatedById: userSession.id,
-      ReceiverId: userSession.SupervisorId || userSession.id,
+      ReceiverId: userSession.supervisorId || userSession.id,
       Details: detailsArray.map((d) => {
         const newDetail = { ...d };
 
