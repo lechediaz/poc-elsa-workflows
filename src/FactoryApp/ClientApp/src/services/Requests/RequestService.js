@@ -8,6 +8,11 @@ class _RequestService {
   editRequest = (requestEdition) =>
     axios.put(API_ROUTES.EDIT_REQUEST, requestEdition);
 
+  deleteRequest = (requestId) => {
+    const url = API_ROUTES.DELETE_REQUEST.replace('{requestId}', requestId);
+    return axios.delete(url);
+  };
+
   getUserRequests = (userId) => {
     const url = API_ROUTES.USER_REQUESTS.replace('{userId}', userId);
     return axios.get(url);

@@ -14,6 +14,7 @@ namespace FactoryApp.Controllers
     {
         private readonly IApproveRequestService approveRequestService;
         private readonly ICreateRequestService createRequestService;
+        private readonly IDeleteRequestService deleteRequestService;
         private readonly IEditRequestService editRequestService;
         private readonly IGetAllUserRequestsService getAllUserRequestsService;
         private readonly IViewRequestByIdService viewRequestByIdService;
@@ -23,6 +24,7 @@ namespace FactoryApp.Controllers
         public RequestController(
             IApproveRequestService approveRequestService,
             ICreateRequestService createRequestService,
+            IDeleteRequestService deleteRequestService,
             IEditRequestService editRequestService,
             IGetAllUserRequestsService getAllUserRequestsService,
             IViewRequestByIdService viewRequestByIdService,
@@ -31,6 +33,7 @@ namespace FactoryApp.Controllers
         {
             this.approveRequestService = approveRequestService;
             this.createRequestService = createRequestService;
+            this.deleteRequestService = deleteRequestService;
             this.editRequestService = editRequestService;
             this.getAllUserRequestsService = getAllUserRequestsService;
             this.viewRequestByIdService = viewRequestByIdService;
@@ -83,6 +86,19 @@ namespace FactoryApp.Controllers
         public async Task<ActionResult> Edit(EditRequestDto requestEdition)
         {
             ServiceResult result = await editRequestService.EditAsync(requestEdition);
+
+            if (result.Ok)
+            {
+                return Ok();
+            }
+
+            return Problem(result.Message);
+        }
+
+        [HttpDelete("delete/{requestId:int}")]
+        public async Task<ActionResult> Edit([FromRoute] int requestId)
+        {
+            ServiceResult result = await deleteRequestService.DeleteAsync(requestId);
 
             if (result.Ok)
             {

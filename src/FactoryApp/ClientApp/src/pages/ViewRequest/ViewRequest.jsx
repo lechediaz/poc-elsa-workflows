@@ -46,8 +46,14 @@ export const ViewRequest = () => {
         };
 
         ElsaService.publishRequest(info)
+          .then(() =>
+            swal({
+              icon: 'success',
+              text: 'Solicitud publicada correctamente',
+              timer: 3000,
+            })
+          )
           .then(() => {
-            console.log('Good');
             history.push(ROUTES.REQUESTS);
           })
           .catch(() => console.log('error'));
@@ -58,6 +64,33 @@ export const ViewRequest = () => {
   const onEditClick = () => {
     const url = ROUTES.EDIT_REQUEST.replace(':id', id);
     history.push(url);
+  };
+
+  const onDeleteClick = () => {
+    swal({
+      icon: 'warning',
+      text: 'Por favor confirme que desea eliminar esta solicitud. ¡No se podrá recuperar!.',
+      buttons: {
+        cancel: 'Cancelar',
+        confirm: 'Aceptar',
+      },
+    }).then((confirmed) => {
+      if (confirmed) {
+        RequestService.deleteRequest(id)
+          .then(() =>
+            swal({
+              icon: 'success',
+              text: 'Solicitud eliminada correctamente',
+              timer: 3000,
+            })
+          )
+          .then(() => {
+            console.log('Good');
+            history.push(ROUTES.REQUESTS);
+          })
+          .catch(() => console.log('error'));
+      }
+    });
   };
 
   return (
@@ -123,8 +156,13 @@ export const ViewRequest = () => {
             </button>
           )}
           {request.status === 0 && (
-            <button className="btn btn-warning" onClick={onEditClick}>
+            <button className="btn btn-warning mr-2" onClick={onEditClick}>
               Editar
+            </button>
+          )}
+          {request.status === 0 && (
+            <button className="btn btn-danger" onClick={onDeleteClick}>
+              Eliminar
             </button>
           )}
         </React.Fragment>
