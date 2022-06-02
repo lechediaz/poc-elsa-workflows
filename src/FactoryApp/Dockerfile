@@ -3,7 +3,9 @@ FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /source
 
 # Set react environment variables
+ARG API_SERVER="http://localhost:5002"
 ARG ELSA_SERVER="http://localhost:5000"
+ENV REACT_APP_API_SERVER=$API_SERVER
 ENV REACT_APP_ELSA_SERVER=$ELSA_SERVER
 
 # Install NodeJs

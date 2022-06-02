@@ -30,6 +30,7 @@ services:
       context: FactoryApp
       dockerfile: Dockerfile
       args:
+        API_SERVER: "http://localhost:8010"
         ELSA_SERVER: "http://localhost:8011"
     container_name: FactoryApp
     command:
