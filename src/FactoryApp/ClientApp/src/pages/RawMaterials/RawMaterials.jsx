@@ -35,6 +35,11 @@ export const RawMaterials = () => {
                 <td>{material.stock}</td>
               </tr>
             ))}
+          {rawMaterials.length === 0 && (
+            <tr>
+              <td colSpan="2">Sin registros</td>
+            </tr>
+          )}
         </tbody>
       </Table>
     </div>

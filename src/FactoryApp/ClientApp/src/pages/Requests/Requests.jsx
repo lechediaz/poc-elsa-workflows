@@ -88,6 +88,11 @@ export const Requests = () => {
                 </td>
               </tr>
             ))}
+          {requests.length === 0 && (
+            <tr>
+              <td colSpan="7">Sin registros</td>
+            </tr>
+          )}
         </tbody>
       </Table>
     </div>

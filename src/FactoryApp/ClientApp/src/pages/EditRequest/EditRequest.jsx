@@ -263,6 +263,12 @@ export const EditRequest = () => {
                 </td>
               </tr>
             ))}
+
+          {detailsArray.length === 0 && (
+            <tr>
+              <td colSpan="3">Sin registros</td>
+            </tr>
+          )}
         </tbody>
       </Table>
 
