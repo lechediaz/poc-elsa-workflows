@@ -70,9 +70,9 @@ namespace ElsaDashboardAndServer
 
             app
                .UseStaticFiles() // For Dashboard.
-               .UseHttpActivities()
                .UseRouting()
                .UseCors()
+               .UseHttpActivities()
                .UseEndpoints(endpoints =>
                {
                    // Elsa API Endpoints are implemented as regular ASP.NET Core API controllers.
