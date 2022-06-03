@@ -1,0 +1,220 @@
+{
+	"info": {
+		"_postman_id": "16c00ca9-c051-4c92-9d6d-cfb8563e6592",
+		"name": "LearningElsa",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Requests",
+			"item": [
+				{
+					"name": "Create request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"CreatedById\": 3,\r\n    \"ReceiverId\": 1,\r\n    \"Details\": [\r\n        {\r\n            \"RawMaterialId\": 3,\r\n            \"Quantity\": 6\r\n        },\r\n        {\r\n            \"RawMaterialId\": 4,\r\n            \"Quantity\": 12\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{FACTORY_SERVER}}/api/request/create",
+							"host": [
+								"{{FACTORY_SERVER}}"
+							],
+							"path": [
+								"api",
+								"request",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Publish request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"RequestId\": 1002,\r\n    \"ApproveLink\": \"test\",\r\n    \"RejectLink\": \"test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{FACTORY_SERVER}}/api/request/publish",
+							"host": [
+								"{{FACTORY_SERVER}}"
+							],
+							"path": [
+								"api",
+								"request",
+								"publish"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Approve request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{FACTORY_SERVER}}/api/request/approve/1003",
+							"host": [
+								"{{FACTORY_SERVER}}"
+							],
+							"path": [
+								"api",
+								"request",
+								"approve",
+								"1003"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reject request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{FACTORY_SERVER}}/api/request/reject/1003",
+							"host": [
+								"{{FACTORY_SERVER}}"
+							],
+							"path": [
+								"api",
+								"request",
+								"reject",
+								"1003"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Users list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{FACTORY_SERVER}}/api/user/list",
+							"host": [
+								"{{FACTORY_SERVER}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"list"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Raw materials",
+			"item": [
+				{
+					"name": "Get raw materials list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{FACTORY_SERVER}}/api/raw-material/list",
+							"host": [
+								"{{FACTORY_SERVER}}"
+							],
+							"path": [
+								"api",
+								"raw-material",
+								"list"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Elsa",
+			"item": [
+				{
+					"name": "Publish request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"RequestId\": 10,\r\n    \"Author\": {\r\n        \"Name\": \"Elizabeth Sanchez\",\r\n        \"Email\": \"elizabeths@fakemail.com\"\r\n    },\r\n    \"Approver\":{\r\n        \"Name\": \"Oscar Diaz\",\r\n        \"Email\": \"lechediaz@gmail.com\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ELSA_SERVER}}/request/publish",
+							"host": [
+								"{{ELSA_SERVER}}"
+							],
+							"path": [
+								"request",
+								"publish"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "FACTORY_SERVER",
+			"value": "http://localhost:5002"
+		},
+		{
+			"key": "ELSA_SERVER",
+			"value": "http://localhost:5000"
+		}
+	]
+}

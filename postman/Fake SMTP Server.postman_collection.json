@@ -1,0 +1,71 @@
+{
+	"info": {
+		"_postman_id": "09f8371a-c924-4df9-a9d7-692c714a48fb",
+		"name": "Fake SMTP Server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Consultar todos los correos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{FAKE_STMP_SERVER_URI}}/api/emails",
+					"host": [
+						"{{FAKE_STMP_SERVER_URI}}"
+					],
+					"path": [
+						"api",
+						"emails"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar todos los correos",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{FAKE_STMP_SERVER_URI}}/api/emails",
+					"host": [
+						"{{FAKE_STMP_SERVER_URI}}"
+					],
+					"path": [
+						"api",
+						"emails"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "FAKE_STMP_SERVER_URI",
+			"value": "http://192.168.0.50:1080"
+		}
+	]
+}
