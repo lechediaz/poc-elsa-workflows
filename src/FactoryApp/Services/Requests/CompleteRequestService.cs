@@ -4,31 +4,32 @@ using FactoryApp.Data;
 using FactoryApp.Enums;
 using FactoryApp.Models;
 using FactoryApp.Services.Base;
+using Microsoft.EntityFrameworkCore;
 
 namespace FactoryApp.Services.Requests
 {
     /// <summary>
-    /// Defines the method to approve a request.
+    /// Defines the method to complete a request.
     /// </summary>
-    public interface IApproveRequestService
+    public interface ICompleteRequestService
     {
         /// <summary>
-        /// Allows to approve a request.
+        /// Allows to complete a request.
         /// </summary>
         /// <param name="requestId">The request Id.</param>
         /// <returns>Service result.</returns>
-        Task<ServiceResult> ApproveAsync(int requestId);
+        Task<ServiceResult> CompleteAsync(int requestId);
     }
 
     /// <summary>
-    /// Implements the method to approve a request.
+    /// Implements the method to complete a request.
     /// </summary>
-    public class ApproveRequestService : IApproveRequestService
+    public class CompleteRequestService : ICompleteRequestService
     {
         private readonly IValidateRequestExistService validateRequestExistService;
         private readonly ApplicationDbContext dbContext;
 
-        public ApproveRequestService(
+        public CompleteRequestService(
             IValidateRequestExistService validateRequestExistService,
             ApplicationDbContext dbContext)
         {
@@ -37,7 +38,7 @@ namespace FactoryApp.Services.Requests
         }
 
         /// <inheritdoc/>
-        public async Task<ServiceResult> ApproveAsync(int requestId)
+        public async Task<ServiceResult> CompleteAsync(int requestId)
         {
             var result = new ServiceResult();
 
@@ -49,16 +50,25 @@ namespace FactoryApp.Services.Requests
                 return result;
             }
 
-            Request request = await dbContext.Requests.FindAsync(requestId);
+            Request request = await dbContext.Requests
+                .Include("Details.RawMaterial")
+                .FirstOrDefaultAsync(r => r.Id == requestId);
 
-            if (request.Status != RequestStatus.Published)
+            if (request.Status != RequestStatus.InShipment)
             {
-                result.Message = "The request must be published first.";
+                result.Message = "The request must be in shipment status first.";
                 return result;
             }
 
-            request.Status = RequestStatus.Approved;
-            request.ApprovedAt = DateTime.UtcNow;
+            request.Status = RequestStatus.Completed;
+            request.CompletedAt = DateTime.UtcNow;
+
+            // Update stocks.
+
+            foreach (var item in request.Details)
+            {
+                item.RawMaterial.Stock = item.Quantity;
+            }
 
             await dbContext.SaveChangesAsync();
 

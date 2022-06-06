@@ -5,6 +5,9 @@
         Draft,
         Published,
         Approved,
-        Rejected
+        Rejected,
+        InNegociation,
+        InShipment,
+        Completed
     }
 }

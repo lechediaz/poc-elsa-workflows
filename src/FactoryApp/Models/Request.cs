@@ -13,10 +13,13 @@ namespace FactoryApp.Models
         [Required]
         public RequestStatus Status { get; set; }
         public DateTime CreatedAt { get; set; }
-        public int CreatedById { get; set; }
-        public int ReceiverId { get; set; }
+        public int AuthorId { get; set; }
+        public int ApproverId { get; set; }
         public DateTime? ApprovedAt { get; set; }
         public DateTime? RejectedAt { get; set; }
+        public DateTime? InNegociationAt { get; set; }
+        public DateTime? InShipmentAt { get; set; }
+        public DateTime? CompletedAt { get; set; }
 
         [MaxLength(300)]
         public string ApproveLink { get; set; }
@@ -26,8 +29,8 @@ namespace FactoryApp.Models
         #endregion
 
         #region Relations
-        public virtual User CreatedBy { get; set; }
-        public virtual User Receiver { get; set; }
+        public virtual User Author { get; set; }
+        public virtual User Approver { get; set; }
 
         public virtual ICollection<RequestDetail> Details { get; set; }
         #endregion

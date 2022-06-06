@@ -11,8 +11,8 @@ namespace FactoryApp.Dtos
         public DateTime CreatedAt { get; set; }
         public DateTime? ApprovedAt { get; set; }
         public DateTime? RejectedAt { get; set; }
-        public virtual UserInViewRequestDto CreatedBy { get; set; }
-        public virtual UserInViewRequestDto Receiver { get; set; }
+        public virtual UserInViewRequestDto Author { get; set; }
+        public virtual UserInViewRequestDto Approver { get; set; }
         public virtual IEnumerable<DetailInViewRequestDto> Details { get; set; }
     }
 

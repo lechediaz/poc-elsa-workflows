@@ -73,7 +73,7 @@ export const Requests = () => {
             requests.map((request) => (
               <tr key={`request-${request.id}`}>
                 <td>{request.id}</td>
-                <td>{request.createdBy}</td>
+                <td>{request.author}</td>
                 <td>{request.approver}</td>
                 <td>{request.createdAt}</td>
                 <td>{request.statusName}</td>

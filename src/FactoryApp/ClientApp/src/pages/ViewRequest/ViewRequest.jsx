@@ -36,12 +36,12 @@ export const ViewRequest = () => {
         const info = {
           RequestId: request.id,
           Author: {
-            Name: request.createdBy.name,
-            Email: request.createdBy.email,
+            Name: request.author.name,
+            Email: request.author.email,
           },
           Approver: {
-            Name: request.receiver.name,
-            Email: request.receiver.email,
+            Name: request.approver.name,
+            Email: request.approver.email,
           },
         };
 
@@ -105,10 +105,10 @@ export const ViewRequest = () => {
         <React.Fragment>
           <div className="row">
             <div className="col-4">
-              <strong>Creado por:</strong> {request.createdBy.name}
+              <strong>Creado por:</strong> {request.author.name}
             </div>
             <div className="col-4">
-              <strong>Aprobador:</strong> {request.receiver.name}
+              <strong>Aprobador:</strong> {request.approver.name}
             </div>
             <div className="col-4">
               <strong>Fecha de Creación:</strong> {request.createdAt}

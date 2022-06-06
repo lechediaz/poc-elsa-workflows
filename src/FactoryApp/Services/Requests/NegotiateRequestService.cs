@@ -8,27 +8,27 @@ using FactoryApp.Services.Base;
 namespace FactoryApp.Services.Requests
 {
     /// <summary>
-    /// Defines the method to approve a request.
+    /// Defines the method to negotiate a request.
     /// </summary>
-    public interface IApproveRequestService
+    public interface INegotiateRequestService
     {
         /// <summary>
-        /// Allows to approve a request.
+        /// Allows to negotiate a request.
         /// </summary>
         /// <param name="requestId">The request Id.</param>
         /// <returns>Service result.</returns>
-        Task<ServiceResult> ApproveAsync(int requestId);
+        Task<ServiceResult> NegotiateAsync(int requestId);
     }
 
     /// <summary>
-    /// Implements the method to approve a request.
+    /// Implements the method to negotiate a request.
     /// </summary>
-    public class ApproveRequestService : IApproveRequestService
+    public class NegotiateRequestService : INegotiateRequestService
     {
         private readonly IValidateRequestExistService validateRequestExistService;
         private readonly ApplicationDbContext dbContext;
 
-        public ApproveRequestService(
+        public NegotiateRequestService(
             IValidateRequestExistService validateRequestExistService,
             ApplicationDbContext dbContext)
         {
@@ -37,7 +37,7 @@ namespace FactoryApp.Services.Requests
         }
 
         /// <inheritdoc/>
-        public async Task<ServiceResult> ApproveAsync(int requestId)
+        public async Task<ServiceResult> NegotiateAsync(int requestId)
         {
             var result = new ServiceResult();
 
@@ -51,14 +51,14 @@ namespace FactoryApp.Services.Requests
 
             Request request = await dbContext.Requests.FindAsync(requestId);
 
-            if (request.Status != RequestStatus.Published)
+            if (request.Status != RequestStatus.Approved)
             {
-                result.Message = "The request must be published first.";
+                result.Message = "The request must be approved first.";
                 return result;
             }
 
-            request.Status = RequestStatus.Approved;
-            request.ApprovedAt = DateTime.UtcNow;
+            request.Status = RequestStatus.InNegociation;
+            request.InNegociationAt = DateTime.UtcNow;
 
             await dbContext.SaveChangesAsync();
 

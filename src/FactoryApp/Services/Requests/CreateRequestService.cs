@@ -48,9 +48,9 @@ namespace FactoryApp.Services.Requests
             var newRequest = new Request()
             {
                 CreatedAt = DateTime.UtcNow,
-                CreatedById = requestCreation.CreatedById,
+                AuthorId = requestCreation.AuthorId,
                 Details = details,
-                ReceiverId = requestCreation.ReceiverId,
+                ApproverId = requestCreation.ApproverId,
                 Status = RequestStatus.Draft
             };
 

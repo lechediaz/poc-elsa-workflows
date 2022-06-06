@@ -52,7 +52,7 @@ namespace FactoryApp.Services.Requests
 
             IQueryable<Request> query = dbContext.Requests.Where(r => r.Id == requestId);
 
-            var includes = new string[] { "CreatedBy", "Receiver", "Details.RawMaterial" };
+            var includes = new string[] { "Author", "Approver", "Details.RawMaterial" };
 
             query = includes.Aggregate(query, (current, include) => current.Include(include));
 
@@ -63,10 +63,10 @@ namespace FactoryApp.Services.Requests
             result.Extras = new ViewRequestDto()
             {
                 ApprovedAt = request.ApprovedAt,
-                CreatedBy = new UserInViewRequestDto()
+                Author = new UserInViewRequestDto()
                 {
-                    Email = request.CreatedBy.Email,
-                    Name = request.CreatedBy.Name
+                    Email = request.Author.Email,
+                    Name = request.Author.Name
                 },
                 CreatedAt = request.CreatedAt,
                 Details = request.Details.Select(d => new DetailInViewRequestDto()
@@ -76,10 +76,10 @@ namespace FactoryApp.Services.Requests
                     Quantity = d.Quantity
                 }),
                 Id = request.Id,
-                Receiver = new UserInViewRequestDto()
+                Approver = new UserInViewRequestDto()
                 {
-                    Email = request.Receiver.Email,
-                    Name = request.Receiver.Name
+                    Email = request.Approver.Email,
+                    Name = request.Approver.Name
                 },
                 RejectedAt = request.RejectedAt,
                 Status = request.Status

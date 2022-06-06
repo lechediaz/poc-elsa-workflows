@@ -36,7 +36,7 @@ namespace ElsaDashboardAndServer
 
             services.AddCors(options =>
                 options.AddDefaultPolicy(
-                    policy => policy.WithOrigins("http://localhost:3000", "http://localhost:8010")
+                    policy => policy.WithOrigins("http://localhost:3000", "http://localhost:8010", "http://localhost:5002")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                 )

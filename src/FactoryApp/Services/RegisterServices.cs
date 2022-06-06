@@ -22,10 +22,13 @@ namespace Microsoft.Extensions.DependencyInjection
 
             #region Requests
             services.AddScoped<IApproveRequestService, ApproveRequestService>();
+            services.AddScoped<ICompleteRequestService, CompleteRequestService>();
             services.AddScoped<ICreateRequestService, CreateRequestService>();
             services.AddScoped<IDeleteRequestService, DeleteRequestService>();
+            services.AddScoped<IDispatchRequestService, DispatchRequestService>();
             services.AddScoped<IEditRequestService, EditRequestService>();
             services.AddScoped<IGetAllUserRequestsService, GetAllUserRequestsService>();
+            services.AddScoped<INegotiateRequestService, NegotiateRequestService>();
             services.AddScoped<IPublishRequestService, PublishRequestService>();
             services.AddScoped<IRejectRequestService, RejectRequestService>();
             services.AddScoped<IValidateRequestExistService, ValidateRequestExistService>();

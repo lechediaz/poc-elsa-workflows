@@ -157,8 +157,8 @@ export const EditRequest = () => {
     let httpRequest;
 
     if (id === undefined) {
-      request.CreatedById = userSession.id;
-      request.ReceiverId = userSession.supervisorId || userSession.id;
+      request.AuthorId = userSession.id;
+      request.ApproverId = userSession.supervisorId || userSession.id;
 
       httpRequest = RequestService.createRequest(request);
     } else {

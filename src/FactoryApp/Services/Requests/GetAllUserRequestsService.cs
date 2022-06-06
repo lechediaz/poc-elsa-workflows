@@ -41,23 +41,23 @@ namespace FactoryApp.Services.Requests
         {
             var result = new ServiceResult<IEnumerable<UserRequestDto>>();
 
-            IQueryable<Request> query = dbContext.Requests.Where(r => r.CreatedById == userId);
+            IQueryable<Request> query = dbContext.Requests.Where(r => r.AuthorId == userId);
 
             if (status.HasValue)
             {
                 query = query.Where(r => r.Status == status.Value);
             }
 
-            var includes = new string[] { "CreatedBy", "Receiver", "Details" };
+            var includes = new string[] { "Author", "Approver", "Details" };
 
             query = includes.Aggregate(query, (current, include) => current.Include(include));
 
             result.Extras = await query.OrderByDescending(r => r.CreatedAt)
                 .Select(r => new UserRequestDto()
                 {
-                    Approver = r.Receiver.Name,
+                    Approver = r.Approver.Name,
                     CreatedAt = r.CreatedAt,
-                    CreatedBy = r.CreatedBy.Name,
+                    Author = r.Author.Name,
                     Id = r.Id,
                     Status = r.Status,
                     TotalItems = r.Details.Count

@@ -27,7 +27,7 @@ namespace FactoryApp.Models
         public virtual User Supervisor { get; set; }
         public virtual ICollection<User> Subordinates { get; set; }
         public virtual ICollection<Request> RequestsCreated { get; set; }
-        public virtual ICollection<Request> RequestsAsReceiver { get; set; }
+        public virtual ICollection<Request> RequestsAsApprover { get; set; }
         #endregion
     }
 }

@@ -27,16 +27,16 @@ namespace FactoryApp.Data
                 .IsRequired(false);
 
             modelBuilder.Entity<Request>()
-                .HasOne(s => s.CreatedBy)
+                .HasOne(s => s.Author)
                 .WithMany(s => s.RequestsCreated)
-                .HasForeignKey(k => k.CreatedById)
+                .HasForeignKey(k => k.AuthorId)
                 .OnDelete(DeleteBehavior.NoAction)
                 .IsRequired();
 
             modelBuilder.Entity<Request>()
-                .HasOne(s => s.Receiver)
-                .WithMany(s => s.RequestsAsReceiver)
-                .HasForeignKey(k => k.ReceiverId)
+                .HasOne(s => s.Approver)
+                .WithMany(s => s.RequestsAsApprover)
+                .HasForeignKey(k => k.ApproverId)
                 .OnDelete(DeleteBehavior.NoAction)
                 .IsRequired();
             
