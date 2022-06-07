@@ -20,6 +20,7 @@ namespace FactoryApp.Controllers
         private readonly IEditRequestService editRequestService;
         private readonly IGetAllUserRequestsService getAllUserRequestsService;
         private readonly INegotiateRequestService negotiateRequestService;
+        private readonly IRequestsToCompleteService requestsToCompleteService;
         private readonly IViewRequestByIdService viewRequestByIdService;
         private readonly IPublishRequestService publishRequestService;
         private readonly IRejectRequestService rejectRequestService;
@@ -35,7 +36,8 @@ namespace FactoryApp.Controllers
             INegotiateRequestService negotiateRequestService,
             IViewRequestByIdService viewRequestByIdService,
             IPublishRequestService publishRequestService,
-            IRejectRequestService rejectRequestService)
+            IRejectRequestService rejectRequestService,
+            IRequestsToCompleteService requestsToCompleteService)
         {
             this.approveRequestService = approveRequestService;
             this.completeRequestService = completeRequestService;
@@ -45,9 +47,23 @@ namespace FactoryApp.Controllers
             this.editRequestService = editRequestService;
             this.getAllUserRequestsService = getAllUserRequestsService;
             this.negotiateRequestService = negotiateRequestService;
+            this.requestsToCompleteService = requestsToCompleteService;
             this.viewRequestByIdService = viewRequestByIdService;
             this.publishRequestService = publishRequestService;
             this.rejectRequestService = rejectRequestService;
+        }
+
+        [HttpGet("to-complete")]
+        public async Task<ActionResult<IEnumerable<RequestPendingDto>>> GetPending()
+        {
+            ServiceResult<IEnumerable<RequestPendingDto>> result = await requestsToCompleteService.GetAsync();
+
+            if (result.Ok)
+            {
+                return Ok(result.Extras);
+            }
+
+            return Problem(result.Message);
         }
 
         [HttpGet("from-user/{userId:int}")]

@@ -31,6 +31,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<INegotiateRequestService, NegotiateRequestService>();
             services.AddScoped<IPublishRequestService, PublishRequestService>();
             services.AddScoped<IRejectRequestService, RejectRequestService>();
+            services.AddScoped<IRequestsToCompleteService, RequestsToCompleteService>();
             services.AddScoped<IValidateRequestExistService, ValidateRequestExistService>();
             services.AddScoped<IViewRequestByIdService, ViewRequestByIdService>();
             #endregion

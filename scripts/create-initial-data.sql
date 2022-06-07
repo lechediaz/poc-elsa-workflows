@@ -14,7 +14,8 @@ VALUES
   ,(2 ,'Karen Medina' ,'karenmedina@fakemail.com' ,'ADMIN' ,NULL)
   ,(3 ,'Elizabeth Sanchez' ,'elizabeths@fakemail.com' ,'PRODUCTION' ,1)
   ,(4 ,'Julian Ramirez' ,'julianramirez@fakemail.com' ,'PRODUCTION' ,1)
-  ,(5 ,'Patricia Mejia' ,'patriciamejia@fakemail.com' ,'PRODUCTION' ,2);
+  ,(5 ,'Patricia Mejia' ,'patriciamejia@fakemail.com' ,'PRODUCTION' ,2)
+  ,(6 ,'Fernando Valencia' ,'fernandovalencia@fakemail.com' ,'LOGISTICS', NULL);
 GO
 
 SET IDENTITY_INSERT Users OFF;

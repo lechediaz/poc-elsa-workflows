@@ -6,6 +6,7 @@ export const CREATE_REQUEST = `${API}/api/request/create`;
 export const DELETE_REQUEST = `${API}/api/request/delete/{requestId}`;
 export const EDIT_REQUEST = `${API}/api/request/edit`;
 export const REQUEST_BY_ID = `${API}/api/request/{requestId}`;
+export const REQUESTS_TO_COMPLETE = `${API}/api/request/to-complete`;
 
 // Raw material
 export const RAW_MATERIALS_LIST = `${API}/api/raw-material/list`;

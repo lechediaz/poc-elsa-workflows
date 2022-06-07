@@ -11,6 +11,9 @@ namespace FactoryApp.Dtos
         public DateTime CreatedAt { get; set; }
         public DateTime? ApprovedAt { get; set; }
         public DateTime? RejectedAt { get; set; }
+        public DateTime? InNegociationAt { get; set; }
+        public DateTime? InShipmentAt { get; set; }
+        public DateTime? CompletedAt { get; set; }
         public virtual UserInViewRequestDto Author { get; set; }
         public virtual UserInViewRequestDto Approver { get; set; }
         public virtual IEnumerable<DetailInViewRequestDto> Details { get; set; }
@@ -18,6 +21,7 @@ namespace FactoryApp.Dtos
 
     public class UserInViewRequestDto
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
     }

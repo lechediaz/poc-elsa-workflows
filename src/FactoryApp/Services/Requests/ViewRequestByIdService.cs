@@ -56,18 +56,18 @@ namespace FactoryApp.Services.Requests
 
             query = includes.Aggregate(query, (current, include) => current.Include(include));
 
-
             Request request = await query.FirstOrDefaultAsync();
-
 
             result.Extras = new ViewRequestDto()
             {
                 ApprovedAt = request.ApprovedAt,
                 Author = new UserInViewRequestDto()
                 {
+                    Id = request.AuthorId,
                     Email = request.Author.Email,
                     Name = request.Author.Name
                 },
+                CompletedAt = request.CompletedAt,
                 CreatedAt = request.CreatedAt,
                 Details = request.Details.Select(d => new DetailInViewRequestDto()
                 {
@@ -75,9 +75,12 @@ namespace FactoryApp.Services.Requests
                     Name = d.RawMaterial.Name,
                     Quantity = d.Quantity
                 }),
+                InNegociationAt = request.InNegociationAt,
+                InShipmentAt = request.InShipmentAt,
                 Id = request.Id,
                 Approver = new UserInViewRequestDto()
                 {
+                    Id = request.ApproverId,
                     Email = request.Approver.Email,
                     Name = request.Approver.Name
                 },

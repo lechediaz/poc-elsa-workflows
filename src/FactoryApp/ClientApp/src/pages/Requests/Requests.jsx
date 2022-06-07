@@ -2,30 +2,43 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Table } from 'reactstrap';
 import { filter } from 'rxjs';
-import { ROUTES } from '../../constants';
+import { ROLES, ROUTES } from '../../constants';
 import { RequestService, SessionService } from '../../services';
 import { getStatusName } from '../../utils';
 
 export const Requests = () => {
   const history = useHistory();
   const [requests, setRequests] = useState([]);
+  const [userSession, setUserSession] = useState(null);
 
   useEffect(() => {
     const subscription = SessionService.userSession
       .pipe(filter((_userSession) => _userSession !== null))
       .subscribe((_userSession) => {
-        RequestService.getUserRequests(String(_userSession.id))
-          .then((response) => {
-            const _request = response.data.map((r) => {
-              const statusName = getStatusName(r.status);
-              const newRequest = { ...r, statusName };
+        setUserSession(_userSession);
 
-              return newRequest;
-            });
+        let httpRequest;
 
-            setRequests(_request);
-          })
-          .catch(() => console.log('error'));
+        if (_userSession.role === ROLES.PRODUCTION) {
+          httpRequest = RequestService.getUserRequests(String(_userSession.id));
+        } else if (_userSession.role === ROLES.LOGISTICS) {
+          httpRequest = RequestService.getREquestToComplete();
+        }
+
+        if (httpRequest !== undefined) {
+          httpRequest
+            .then((response) => {
+              const _request = response.data.map((r) => {
+                const statusName = getStatusName(r.status);
+                const newRequest = { ...r, statusName };
+
+                return newRequest;
+              });
+
+              setRequests(_request);
+            })
+            .catch(() => console.log('error'));
+        }
       });
 
     return () => {
@@ -48,13 +61,21 @@ export const Requests = () => {
 
       <p>
         A continuación podrá observar el estado de las diferentes solicitudes en
-        las que usted se encuentre relacionado. Para crear una nueva solicitud,
-        haga click en el botón '<strong>Nueva solicitud</strong>'.
+        las que usted se encuentre relacionado.
+        {userSession && userSession.role !== ROLES.LOGISTICS && (
+          <span>
+            {' '}
+            Para crear una nueva solicitud, haga click en el botón '
+            <strong>Nueva solicitud</strong>'.
+          </span>
+        )}
       </p>
 
-      <button className="btn btn-info mb-3" onClick={onNewRequestClick}>
-        Nueva solicitud
-      </button>
+      {userSession && userSession.role !== ROLES.LOGISTICS && (
+        <button className="btn btn-info mb-3" onClick={onNewRequestClick}>
+          Nueva solicitud
+        </button>
+      )}
 
       <Table striped>
         <thead>

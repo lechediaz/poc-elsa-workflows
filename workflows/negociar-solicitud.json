@@ -1,0 +1,1650 @@
+{
+  "$id": "1",
+  "definitionId": "6863f43020974d8fa47ebcdabc53fcba",
+  "versionId": "4b23c66329a84c45982d7df9da52099b",
+  "name": "NegociarSolicitud",
+  "displayName": "Negociación y Despacho de Solicitudes",
+  "description": "Flujo que permite Negociación y Despacho de Solicitudes hasta completarla.",
+  "version": 3,
+  "variables": {
+    "$id": "2",
+    "data": {}
+  },
+  "customAttributes": {
+    "$id": "3",
+    "data": {}
+  },
+  "isSingleton": false,
+  "persistenceBehavior": "WorkflowBurst",
+  "deleteCompletedInstances": false,
+  "isPublished": true,
+  "isLatest": true,
+  "activities": [
+    {
+      "$id": "4",
+      "activityId": "d08ea47f-b83b-4ffe-850d-48c8fe6636b5",
+      "type": "HttpEndpoint",
+      "displayName": "Negociar solicitud Endpoint",
+      "description": "Endpoint para empezar a negociar una solicitud.",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "5",
+          "name": "Path",
+          "expressions": {
+            "$id": "6",
+            "Literal": "/request/negotiate"
+          }
+        },
+        {
+          "$id": "7",
+          "name": "Methods",
+          "expressions": {
+            "$id": "8",
+            "Json": "[\"POST\"]"
+          }
+        },
+        {
+          "$id": "9",
+          "name": "ReadContent",
+          "expressions": {
+            "$id": "10",
+            "Literal": "true"
+          }
+        },
+        {
+          "$id": "11",
+          "name": "TargetType",
+          "expressions": {
+            "$id": "12"
+          }
+        },
+        {
+          "$id": "13",
+          "name": "Schema",
+          "syntax": "Literal",
+          "expressions": {
+            "$id": "14",
+            "Literal": ""
+          }
+        },
+        {
+          "$id": "15",
+          "name": "Authorize",
+          "expressions": {
+            "$id": "16"
+          }
+        },
+        {
+          "$id": "17",
+          "name": "Policy",
+          "expressions": {
+            "$id": "18"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "19",
+      "activityId": "c4792c7f-ceff-4299-b1f1-52fbc23557a1",
+      "type": "SetVariable",
+      "displayName": "Guardar solicitud en variable",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "20",
+          "name": "VariableName",
+          "expressions": {
+            "$id": "21",
+            "Literal": "Solicitud"
+          }
+        },
+        {
+          "$id": "22",
+          "name": "Value",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "23",
+            "JavaScript": "input.Body"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "24",
+      "activityId": "4198fa95-970c-4817-9489-42841eacdf53",
+      "type": "SendEmail",
+      "displayName": "Enviar correo al autor",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "25",
+          "name": "From",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "26",
+            "Literal": "",
+            "Liquid": "",
+            "JavaScript": "Solicitud.DealMaker.Email"
+          }
+        },
+        {
+          "$id": "27",
+          "name": "To",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "28",
+            "Json": "[]",
+            "JavaScript": "[Solicitud.Author.Email]"
+          }
+        },
+        {
+          "$id": "29",
+          "name": "Subject",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "30",
+            "Liquid": "Se ha iniciado negociación de la solicitud {{ Variables.Solicitud.RequestId }}"
+          }
+        },
+        {
+          "$id": "31",
+          "name": "Attachments",
+          "expressions": {
+            "$id": "32"
+          }
+        },
+        {
+          "$id": "33",
+          "name": "Body",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "34",
+            "Liquid": "Hola {{ Variables.Solicitud.Author.Name }},<br><br>Se ha iniciado la negociación de la solicitud {{ Variables.Solicitud.RequestId }} por parte de {{ Variables.Solicitud.DealMaker.Name }}."
+          }
+        },
+        {
+          "$id": "35",
+          "name": "Cc",
+          "expressions": {
+            "$id": "36"
+          }
+        },
+        {
+          "$id": "37",
+          "name": "Bcc",
+          "expressions": {
+            "$id": "38"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "39",
+      "activityId": "fabd99b2-004c-47bb-8593-bca67554137e",
+      "type": "Fork",
+      "displayName": "Fork",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "40",
+          "name": "Branches",
+          "expressions": {
+            "$id": "41",
+            "Json": "[\"Despachado\",\"Recordatorio\"]"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "42",
+      "activityId": "bec2dd54-007f-4959-8e3b-3d620419f5f6",
+      "type": "SignalReceived",
+      "displayName": "Solicitud despachada",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "43",
+          "name": "Signal",
+          "expressions": {
+            "$id": "44",
+            "Literal": "Despachado"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "45",
+      "activityId": "011fcb62-0771-4f60-95a0-d39770762aaf",
+      "type": "SendEmail",
+      "displayName": "Notificar solicitud despachada",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "46",
+          "name": "From",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "47",
+            "Literal": "oscartest@fakemail.com",
+            "Liquid": "",
+            "JavaScript": "Solicitud.DealMaker.Email"
+          }
+        },
+        {
+          "$id": "48",
+          "name": "To",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "49",
+            "JavaScript": "[Solicitud.Author.Email]"
+          }
+        },
+        {
+          "$id": "50",
+          "name": "Subject",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "51",
+            "Liquid": "Solicitud {{ Variables.Solicitud.RequestId }} despachada"
+          }
+        },
+        {
+          "$id": "52",
+          "name": "Attachments",
+          "expressions": {
+            "$id": "53"
+          }
+        },
+        {
+          "$id": "54",
+          "name": "Body",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "55",
+            "Liquid": "Hola {{ Variables.Solicitud.Author.Name }},<br><br>las negociaciones fueron un éxito y el proveedor ha indicado que tu solicitud ha sido despachada. Por favor notificanos cuando tengas los materiales en tus manos desde el siguiente link:<br><br><a href=\"{{ \"Completado\" | signal_url }}\">Recibido</a>"
+          }
+        },
+        {
+          "$id": "56",
+          "name": "Cc",
+          "expressions": {
+            "$id": "57"
+          }
+        },
+        {
+          "$id": "58",
+          "name": "Bcc",
+          "expressions": {
+            "$id": "59"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "60",
+      "activityId": "45b77456-ed4b-470a-b822-7381c21c2418",
+      "type": "Timer",
+      "name": "RecordatorioNegociacion",
+      "displayName": "Timer recordatorio negociación",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "61",
+          "name": "Timeout",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "62",
+            "JavaScript": "Duration.FromMinutes(5)"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "63",
+      "activityId": "e59a9213-3e2b-47a6-b242-fac204bbc048",
+      "type": "SendEmail",
+      "displayName": "Enviar recordatorio",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "64",
+          "name": "From",
+          "expressions": {
+            "$id": "65",
+            "Literal": "elsanoreply@fakemail.com"
+          }
+        },
+        {
+          "$id": "66",
+          "name": "To",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "67",
+            "Json": "[]",
+            "JavaScript": "[Solicitud.DealMaker.Email]"
+          }
+        },
+        {
+          "$id": "68",
+          "name": "Subject",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "69",
+            "Liquid": "Recordatorio: Negociar la Solicitud {{ Variables.Solicitud.RequestId }}"
+          }
+        },
+        {
+          "$id": "70",
+          "name": "Attachments",
+          "expressions": {
+            "$id": "71"
+          }
+        },
+        {
+          "$id": "72",
+          "name": "Body",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "73",
+            "Liquid": "Hola {{ Variables.Solicitud.DealMaker.Name }},<br><br>Te recordamos la importancia de avanzar en la negociación para completar la solicitud {{ Variables.Solicitud.RequestId }}, una vez hayas completado la negoicación y el proveddor indique que ha despachado los materiales, notificanos desde el siguiente link:<br><br><a href=\"{{ \"Despachado\" | signal_url }}\">Despachado</a>"
+          }
+        },
+        {
+          "$id": "74",
+          "name": "Cc",
+          "expressions": {
+            "$id": "75"
+          }
+        },
+        {
+          "$id": "76",
+          "name": "Bcc",
+          "expressions": {
+            "$id": "77"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "78",
+      "activityId": "f7ede012-ee9b-475e-8853-9fa27238e155",
+      "type": "WriteHttpResponse",
+      "displayName": "HTTP Response",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "79",
+          "name": "Content",
+          "expressions": {
+            "$id": "80",
+            "Literal": "Thanks for the hard work!"
+          }
+        },
+        {
+          "$id": "81",
+          "name": "ContentType",
+          "expressions": {
+            "$id": "82",
+            "Literal": "text/html"
+          }
+        },
+        {
+          "$id": "83",
+          "name": "StatusCode",
+          "expressions": {
+            "$id": "84"
+          }
+        },
+        {
+          "$id": "85",
+          "name": "CharSet",
+          "expressions": {
+            "$id": "86"
+          }
+        },
+        {
+          "$id": "87",
+          "name": "ResponseHeaders",
+          "expressions": {
+            "$id": "88"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "89",
+      "activityId": "73e850c1-b825-41e3-be67-223272bdd3f7",
+      "type": "SetVariable",
+      "displayName": "Asignar SolicitudNegociada en false",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "90",
+          "name": "VariableName",
+          "expressions": {
+            "$id": "91",
+            "Literal": "SolicitudNegociada"
+          }
+        },
+        {
+          "$id": "92",
+          "name": "Value",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "93",
+            "JavaScript": "false"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "94",
+      "activityId": "a535cb5e-7ad5-4811-8c30-0a66f5bdf7a4",
+      "type": "If",
+      "displayName": "Evaluar SolicitudNegociada",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "95",
+          "name": "Condition",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "96",
+            "JavaScript": "SolicitudNegociada === true"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "97",
+      "activityId": "5905d170-615f-4f1e-9214-eca24329d022",
+      "type": "SetVariable",
+      "displayName": "Asignar SolicitudNegociada en true",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "98",
+          "name": "VariableName",
+          "expressions": {
+            "$id": "99",
+            "Literal": "SolicitudNegociada"
+          }
+        },
+        {
+          "$id": "100",
+          "name": "Value",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "101",
+            "JavaScript": "true"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "102",
+      "activityId": "e02156f2-55a0-4051-896b-5e0805e28a26",
+      "type": "SendHttpRequest",
+      "name": "NegotiateHttpRequest",
+      "displayName": "Poner solicitud en Negociación",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "103",
+          "name": "Url",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "104",
+            "Literal": "",
+            "JavaScript": "",
+            "Liquid": "http://FactoryApp/api/request/negotiate/{{ Variables.Solicitud.RequestId }}"
+          }
+        },
+        {
+          "$id": "105",
+          "name": "Method",
+          "expressions": {
+            "$id": "106",
+            "Literal": "POST"
+          }
+        },
+        {
+          "$id": "107",
+          "name": "Content",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "108",
+            "Liquid": ""
+          }
+        },
+        {
+          "$id": "109",
+          "name": "ContentType",
+          "expressions": {
+            "$id": "110",
+            "Literal": ""
+          }
+        },
+        {
+          "$id": "111",
+          "name": "ReadContent",
+          "expressions": {
+            "$id": "112",
+            "Literal": "true"
+          }
+        },
+        {
+          "$id": "113",
+          "name": "ResponseContentParserName",
+          "expressions": {
+            "$id": "114",
+            "Literal": ""
+          }
+        },
+        {
+          "$id": "115",
+          "name": "ResponseContentTargetType",
+          "expressions": {
+            "$id": "116"
+          }
+        },
+        {
+          "$id": "117",
+          "name": "SupportedStatusCodes",
+          "expressions": {
+            "$id": "118",
+            "Json": "[\"200\"]"
+          }
+        },
+        {
+          "$id": "119",
+          "name": "Authorization",
+          "expressions": {
+            "$id": "120"
+          }
+        },
+        {
+          "$id": "121",
+          "name": "RequestHeaders",
+          "expressions": {
+            "$id": "122"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "123",
+      "activityId": "2f3537f5-7c5a-414a-a41f-c6c3ac123d31",
+      "type": "SendHttpRequest",
+      "name": "DispatchHttpRequest",
+      "displayName": "Poner solicitud en Despachada",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "124",
+          "name": "Url",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "125",
+            "Literal": "https://localhost:8010/api/request/approve",
+            "JavaScript": "https://localhost:8010/api/request/approve",
+            "Liquid": "http://FactoryApp/api/request/dispatch/{{ Variables.Solicitud.RequestId }}"
+          }
+        },
+        {
+          "$id": "126",
+          "name": "Method",
+          "expressions": {
+            "$id": "127",
+            "Literal": "POST"
+          }
+        },
+        {
+          "$id": "128",
+          "name": "Content",
+          "expressions": {
+            "$id": "129"
+          }
+        },
+        {
+          "$id": "130",
+          "name": "ContentType",
+          "expressions": {
+            "$id": "131"
+          }
+        },
+        {
+          "$id": "132",
+          "name": "ReadContent",
+          "expressions": {
+            "$id": "133",
+            "Literal": "true"
+          }
+        },
+        {
+          "$id": "134",
+          "name": "ResponseContentParserName",
+          "expressions": {
+            "$id": "135",
+            "Literal": ""
+          }
+        },
+        {
+          "$id": "136",
+          "name": "ResponseContentTargetType",
+          "expressions": {
+            "$id": "137"
+          }
+        },
+        {
+          "$id": "138",
+          "name": "SupportedStatusCodes",
+          "expressions": {
+            "$id": "139",
+            "Json": "[\"200\"]"
+          }
+        },
+        {
+          "$id": "140",
+          "name": "Authorization",
+          "expressions": {
+            "$id": "141"
+          }
+        },
+        {
+          "$id": "142",
+          "name": "RequestHeaders",
+          "expressions": {
+            "$id": "143"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "144",
+      "activityId": "db65925f-cf1e-494c-bf04-d08d6a6c44fc",
+      "type": "WriteHttpResponse",
+      "displayName": "HTTP Response",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "145",
+          "name": "Content",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "146",
+            "JavaScript": "activities.NegotiateHttpRequest.ResponseContent()"
+          }
+        },
+        {
+          "$id": "147",
+          "name": "ContentType",
+          "expressions": {
+            "$id": "148",
+            "Literal": "application/json"
+          }
+        },
+        {
+          "$id": "149",
+          "name": "StatusCode",
+          "expressions": {
+            "$id": "150"
+          }
+        },
+        {
+          "$id": "151",
+          "name": "CharSet",
+          "expressions": {
+            "$id": "152"
+          }
+        },
+        {
+          "$id": "153",
+          "name": "ResponseHeaders",
+          "expressions": {
+            "$id": "154"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "155",
+      "activityId": "8a1d771a-0b31-4bbf-bb70-476297834fdb",
+      "type": "WriteHttpResponse",
+      "displayName": "HTTP Response",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "156",
+          "name": "Content",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "157",
+            "JavaScript": "activities.DispatchHttpRequest.ResponseContent()"
+          }
+        },
+        {
+          "$id": "158",
+          "name": "ContentType",
+          "expressions": {
+            "$id": "159",
+            "Literal": "application/json"
+          }
+        },
+        {
+          "$id": "160",
+          "name": "StatusCode",
+          "expressions": {
+            "$id": "161"
+          }
+        },
+        {
+          "$id": "162",
+          "name": "CharSet",
+          "expressions": {
+            "$id": "163"
+          }
+        },
+        {
+          "$id": "164",
+          "name": "ResponseHeaders",
+          "expressions": {
+            "$id": "165"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "166",
+      "activityId": "780590e4-8e17-439f-a53c-ed0879fcc61d",
+      "type": "ClearTimer",
+      "displayName": "Detener Recordatorio",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "167",
+          "name": "ActivityId",
+          "expressions": {
+            "$id": "168",
+            "Literal": "RecordatorioNegociacion"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "169",
+      "activityId": "89206e2d-becc-49af-aa95-64d5e90db293",
+      "type": "Join",
+      "displayName": "Join",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "170",
+          "name": "Mode",
+          "expressions": {
+            "$id": "171",
+            "Literal": "WaitAny"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "172",
+      "activityId": "dca99a21-2bae-4339-806a-e4b0ad63aaa1",
+      "type": "SendEmail",
+      "displayName": "Enviar correo al negociador",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "173",
+          "name": "From",
+          "expressions": {
+            "$id": "174",
+            "Literal": "elsanoreply@fakemail.com",
+            "Liquid": ""
+          }
+        },
+        {
+          "$id": "175",
+          "name": "To",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "176",
+            "Json": "",
+            "JavaScript": "[Solicitud.DealMaker.Email]"
+          }
+        },
+        {
+          "$id": "177",
+          "name": "Subject",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "178",
+            "Literal": "",
+            "Liquid": "Iniciaste la negocicación para la solicitud {{ Variables.Solicitud.RequestId }}"
+          }
+        },
+        {
+          "$id": "179",
+          "name": "Attachments",
+          "expressions": {
+            "$id": "180"
+          }
+        },
+        {
+          "$id": "181",
+          "name": "Body",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "182",
+            "Literal": "",
+            "Liquid": "Hola {{ Variables.Solicitud.DealMaker.Name }},<br><br>Gracias por tomar el reto de negociar la solicitud {{ Variables.Solicitud.RequestId }}, una vez hayas completado la negociación y el proveddor indique que ha despachado los materiales, notificanos desde el siguiente link:<br><br><a href=\"{{ \"Despachado\" | signal_url }}\">Despachado</a>"
+          }
+        },
+        {
+          "$id": "183",
+          "name": "Cc",
+          "expressions": {
+            "$id": "184"
+          }
+        },
+        {
+          "$id": "185",
+          "name": "Bcc",
+          "expressions": {
+            "$id": "186"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "187",
+      "activityId": "56d7ab5f-5150-460b-810c-257bf9a961ee",
+      "type": "SetVariable",
+      "displayName": "Asignar SolicitudRecibida en false",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "188",
+          "name": "VariableName",
+          "expressions": {
+            "$id": "189",
+            "Literal": "SolicitudRecibida"
+          }
+        },
+        {
+          "$id": "190",
+          "name": "Value",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "191",
+            "JavaScript": "false"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "192",
+      "activityId": "6e579e34-92a7-4755-9f40-014674b046b4",
+      "type": "Fork",
+      "displayName": "Fork",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "193",
+          "name": "Branches",
+          "expressions": {
+            "$id": "194",
+            "Json": "[\"Completado\",\"Recordatorio\"]"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "195",
+      "activityId": "6a2affad-8a73-4d2d-8ffd-459ad10b9c49",
+      "type": "SignalReceived",
+      "displayName": "Solicitud recibida",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "196",
+          "name": "Signal",
+          "expressions": {
+            "$id": "197",
+            "Literal": "Completado"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "198",
+      "activityId": "39cfd978-a1ba-4863-8b99-5b69a2211f7b",
+      "type": "SetVariable",
+      "displayName": "Asignar SolicitudCompletada en true",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "199",
+          "name": "VariableName",
+          "expressions": {
+            "$id": "200",
+            "Literal": "SolicitudCompletada"
+          }
+        },
+        {
+          "$id": "201",
+          "name": "Value",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "202",
+            "JavaScript": "true"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "203",
+      "activityId": "cd8ab81a-3517-46d5-bea9-73c7722fe138",
+      "type": "SendHttpRequest",
+      "name": "CompleteHttpRequest",
+      "displayName": "Poner solicitud como Completada",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "204",
+          "name": "Url",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "205",
+            "Literal": "",
+            "Liquid": "http://FactoryApp/api/request/complete/{{ Variables.Solicitud.RequestId }}"
+          }
+        },
+        {
+          "$id": "206",
+          "name": "Method",
+          "expressions": {
+            "$id": "207",
+            "Literal": "POST"
+          }
+        },
+        {
+          "$id": "208",
+          "name": "Content",
+          "expressions": {
+            "$id": "209"
+          }
+        },
+        {
+          "$id": "210",
+          "name": "ContentType",
+          "expressions": {
+            "$id": "211"
+          }
+        },
+        {
+          "$id": "212",
+          "name": "ReadContent",
+          "expressions": {
+            "$id": "213",
+            "Literal": "true"
+          }
+        },
+        {
+          "$id": "214",
+          "name": "ResponseContentParserName",
+          "expressions": {
+            "$id": "215"
+          }
+        },
+        {
+          "$id": "216",
+          "name": "ResponseContentTargetType",
+          "expressions": {
+            "$id": "217"
+          }
+        },
+        {
+          "$id": "218",
+          "name": "SupportedStatusCodes",
+          "expressions": {
+            "$id": "219",
+            "Json": "[\"200\"]"
+          }
+        },
+        {
+          "$id": "220",
+          "name": "Authorization",
+          "expressions": {
+            "$id": "221"
+          }
+        },
+        {
+          "$id": "222",
+          "name": "RequestHeaders",
+          "expressions": {
+            "$id": "223"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "224",
+      "activityId": "4d078a15-4969-4039-8345-8a0e1d9ee84e",
+      "type": "SendEmail",
+      "displayName": "Notificar solicitud completada",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "225",
+          "name": "From",
+          "expressions": {
+            "$id": "226",
+            "Literal": "elsanoreply@fakemail.com"
+          }
+        },
+        {
+          "$id": "227",
+          "name": "To",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "228",
+            "JavaScript": "[Solicitud.Author.Email, Solicitud.DealMaker.Email]"
+          }
+        },
+        {
+          "$id": "229",
+          "name": "Subject",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "230",
+            "Liquid": "Se completó la solicitud {{ Variables.Solicitud.RequestId }}"
+          }
+        },
+        {
+          "$id": "231",
+          "name": "Attachments",
+          "expressions": {
+            "$id": "232"
+          }
+        },
+        {
+          "$id": "233",
+          "name": "Body",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "234",
+            "Liquid": "El presente es para notificar que la solicitud {{ Variables.Solicitud.RequestId }} fue completada correctamente.<br><br>¡Gracias por el esfuerzo!"
+          }
+        },
+        {
+          "$id": "235",
+          "name": "Cc",
+          "expressions": {
+            "$id": "236"
+          }
+        },
+        {
+          "$id": "237",
+          "name": "Bcc",
+          "expressions": {
+            "$id": "238"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "239",
+      "activityId": "d1e8f85c-3d6e-453f-89fc-08d94601fc84",
+      "type": "Join",
+      "displayName": "Join",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "240",
+          "name": "Mode",
+          "expressions": {
+            "$id": "241",
+            "Literal": "WaitAny"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "242",
+      "activityId": "960bbeb3-9781-4bab-b6d6-b0ab68d17aab",
+      "type": "Timer",
+      "name": "RecordatorioCompletado",
+      "displayName": "Timer recordatorio completado",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "243",
+          "name": "Timeout",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "244",
+            "JavaScript": "durationFromMinutes(5)"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "245",
+      "activityId": "c1515f9c-d077-4afc-8013-2a6d92b6255d",
+      "type": "ClearTimer",
+      "displayName": "Detener Recordatorio",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "246",
+          "name": "ActivityId",
+          "expressions": {
+            "$id": "247",
+            "Literal": "RecordatorioCompletado"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "248",
+      "activityId": "36c337a8-c076-4dc3-9ef8-b4c116bd4c86",
+      "type": "If",
+      "displayName": "Evaluar SolicitudRecibida",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "249",
+          "name": "Condition",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "250",
+            "JavaScript": "SolicitudRecibida === true"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "251",
+      "activityId": "f42e3962-248c-42d1-b969-d8ef30343bee",
+      "type": "SendEmail",
+      "displayName": "Enviar recordatorio",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "252",
+          "name": "From",
+          "expressions": {
+            "$id": "253",
+            "Literal": "elsanoreply@fakemail.com"
+          }
+        },
+        {
+          "$id": "254",
+          "name": "To",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "255",
+            "JavaScript": "[Solicitud.Author.Email]"
+          }
+        },
+        {
+          "$id": "256",
+          "name": "Subject",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "257",
+            "Literal": "R",
+            "Liquid": "Recordatorio: Indicar si {{ Variables.Solicitud.RequestId }} ha sido recibida"
+          }
+        },
+        {
+          "$id": "258",
+          "name": "Attachments",
+          "expressions": {
+            "$id": "259"
+          }
+        },
+        {
+          "$id": "260",
+          "name": "Body",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "261",
+            "Liquid": "Hola {{ Variables.Solicitud.Author.Name }},<br><br>Quisieramos conocer si los materiales de la solicitud {{ Variables.Solicitud.RequestId }} ya se encuentran en tus manos, haznoslo saber desde el siguiente link:<br><br><a href=\"{{ \"Completado\" | signal_url }}\">Recibido</a>"
+          }
+        },
+        {
+          "$id": "262",
+          "name": "Cc",
+          "expressions": {
+            "$id": "263"
+          }
+        },
+        {
+          "$id": "264",
+          "name": "Bcc",
+          "expressions": {
+            "$id": "265"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "266",
+      "activityId": "a95f97d3-4117-4d3d-bed7-a1ad4c4f51b4",
+      "type": "WriteHttpResponse",
+      "displayName": "HTTP Response",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "267",
+          "name": "Content",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "268",
+            "JavaScript": "activities.CompleteHttpRequest.ResponseContent()"
+          }
+        },
+        {
+          "$id": "269",
+          "name": "ContentType",
+          "expressions": {
+            "$id": "270",
+            "Literal": "application/json"
+          }
+        },
+        {
+          "$id": "271",
+          "name": "StatusCode",
+          "expressions": {
+            "$id": "272"
+          }
+        },
+        {
+          "$id": "273",
+          "name": "CharSet",
+          "expressions": {
+            "$id": "274"
+          }
+        },
+        {
+          "$id": "275",
+          "name": "ResponseHeaders",
+          "expressions": {
+            "$id": "276"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "277",
+      "activityId": "c6c28a0b-cb3e-46d9-a013-33041512dcdf",
+      "type": "WriteHttpResponse",
+      "displayName": "HTTP Response",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "278",
+          "name": "Content",
+          "expressions": {
+            "$id": "279",
+            "Literal": "Thanks for the hard work!"
+          }
+        },
+        {
+          "$id": "280",
+          "name": "ContentType",
+          "expressions": {
+            "$id": "281",
+            "Literal": "text/html"
+          }
+        },
+        {
+          "$id": "282",
+          "name": "StatusCode",
+          "expressions": {
+            "$id": "283"
+          }
+        },
+        {
+          "$id": "284",
+          "name": "CharSet",
+          "expressions": {
+            "$id": "285"
+          }
+        },
+        {
+          "$id": "286",
+          "name": "ResponseHeaders",
+          "expressions": {
+            "$id": "287"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    }
+  ],
+  "connections": [
+    {
+      "$id": "288",
+      "sourceActivityId": "d08ea47f-b83b-4ffe-850d-48c8fe6636b5",
+      "targetActivityId": "c4792c7f-ceff-4299-b1f1-52fbc23557a1",
+      "outcome": "Done"
+    },
+    {
+      "$id": "289",
+      "sourceActivityId": "fabd99b2-004c-47bb-8593-bca67554137e",
+      "targetActivityId": "bec2dd54-007f-4959-8e3b-3d620419f5f6",
+      "outcome": "Approve"
+    },
+    {
+      "$id": "290",
+      "sourceActivityId": "fabd99b2-004c-47bb-8593-bca67554137e",
+      "targetActivityId": "45b77456-ed4b-470a-b822-7381c21c2418",
+      "outcome": "Remind"
+    },
+    {
+      "$id": "291",
+      "sourceActivityId": "c4792c7f-ceff-4299-b1f1-52fbc23557a1",
+      "targetActivityId": "73e850c1-b825-41e3-be67-223272bdd3f7",
+      "outcome": "Done"
+    },
+    {
+      "$id": "292",
+      "sourceActivityId": "45b77456-ed4b-470a-b822-7381c21c2418",
+      "targetActivityId": "a535cb5e-7ad5-4811-8c30-0a66f5bdf7a4",
+      "outcome": "Done"
+    },
+    {
+      "$id": "293",
+      "sourceActivityId": "a535cb5e-7ad5-4811-8c30-0a66f5bdf7a4",
+      "targetActivityId": "e59a9213-3e2b-47a6-b242-fac204bbc048",
+      "outcome": "False"
+    },
+    {
+      "$id": "294",
+      "sourceActivityId": "e59a9213-3e2b-47a6-b242-fac204bbc048",
+      "targetActivityId": "45b77456-ed4b-470a-b822-7381c21c2418",
+      "outcome": "Done"
+    },
+    {
+      "$id": "295",
+      "sourceActivityId": "bec2dd54-007f-4959-8e3b-3d620419f5f6",
+      "targetActivityId": "2f3537f5-7c5a-414a-a41f-c6c3ac123d31",
+      "outcome": "Done"
+    },
+    {
+      "$id": "296",
+      "sourceActivityId": "e02156f2-55a0-4051-896b-5e0805e28a26",
+      "targetActivityId": "4198fa95-970c-4817-9489-42841eacdf53",
+      "outcome": "200"
+    },
+    {
+      "$id": "297",
+      "sourceActivityId": "e02156f2-55a0-4051-896b-5e0805e28a26",
+      "targetActivityId": "db65925f-cf1e-494c-bf04-d08d6a6c44fc",
+      "outcome": "Unsupported Status Code"
+    },
+    {
+      "$id": "298",
+      "sourceActivityId": "2f3537f5-7c5a-414a-a41f-c6c3ac123d31",
+      "targetActivityId": "011fcb62-0771-4f60-95a0-d39770762aaf",
+      "outcome": "200"
+    },
+    {
+      "$id": "299",
+      "sourceActivityId": "2f3537f5-7c5a-414a-a41f-c6c3ac123d31",
+      "targetActivityId": "8a1d771a-0b31-4bbf-bb70-476297834fdb",
+      "outcome": "Unsupported Status Code"
+    },
+    {
+      "$id": "300",
+      "sourceActivityId": "89206e2d-becc-49af-aa95-64d5e90db293",
+      "targetActivityId": "780590e4-8e17-439f-a53c-ed0879fcc61d",
+      "outcome": "Done"
+    },
+    {
+      "$id": "301",
+      "sourceActivityId": "a535cb5e-7ad5-4811-8c30-0a66f5bdf7a4",
+      "targetActivityId": "89206e2d-becc-49af-aa95-64d5e90db293",
+      "outcome": "True"
+    },
+    {
+      "$id": "302",
+      "sourceActivityId": "f7ede012-ee9b-475e-8853-9fa27238e155",
+      "targetActivityId": "89206e2d-becc-49af-aa95-64d5e90db293",
+      "outcome": "Done"
+    },
+    {
+      "$id": "303",
+      "sourceActivityId": "4198fa95-970c-4817-9489-42841eacdf53",
+      "targetActivityId": "dca99a21-2bae-4339-806a-e4b0ad63aaa1",
+      "outcome": "Done"
+    },
+    {
+      "$id": "304",
+      "sourceActivityId": "dca99a21-2bae-4339-806a-e4b0ad63aaa1",
+      "targetActivityId": "fabd99b2-004c-47bb-8593-bca67554137e",
+      "outcome": "Done"
+    },
+    {
+      "$id": "305",
+      "sourceActivityId": "011fcb62-0771-4f60-95a0-d39770762aaf",
+      "targetActivityId": "5905d170-615f-4f1e-9214-eca24329d022",
+      "outcome": "Done"
+    },
+    {
+      "$id": "306",
+      "sourceActivityId": "fabd99b2-004c-47bb-8593-bca67554137e",
+      "targetActivityId": "bec2dd54-007f-4959-8e3b-3d620419f5f6",
+      "outcome": "Despachado"
+    },
+    {
+      "$id": "307",
+      "sourceActivityId": "5905d170-615f-4f1e-9214-eca24329d022",
+      "targetActivityId": "56d7ab5f-5150-460b-810c-257bf9a961ee",
+      "outcome": "Done"
+    },
+    {
+      "$id": "308",
+      "sourceActivityId": "56d7ab5f-5150-460b-810c-257bf9a961ee",
+      "targetActivityId": "f7ede012-ee9b-475e-8853-9fa27238e155",
+      "outcome": "Done"
+    },
+    {
+      "$id": "309",
+      "sourceActivityId": "73e850c1-b825-41e3-be67-223272bdd3f7",
+      "targetActivityId": "e02156f2-55a0-4051-896b-5e0805e28a26",
+      "outcome": "Done"
+    },
+    {
+      "$id": "310",
+      "sourceActivityId": "780590e4-8e17-439f-a53c-ed0879fcc61d",
+      "targetActivityId": "6e579e34-92a7-4755-9f40-014674b046b4",
+      "outcome": "Done"
+    },
+    {
+      "$id": "311",
+      "sourceActivityId": "6e579e34-92a7-4755-9f40-014674b046b4",
+      "targetActivityId": "6a2affad-8a73-4d2d-8ffd-459ad10b9c49",
+      "outcome": "Completado"
+    },
+    {
+      "$id": "312",
+      "sourceActivityId": "6a2affad-8a73-4d2d-8ffd-459ad10b9c49",
+      "targetActivityId": "39cfd978-a1ba-4863-8b99-5b69a2211f7b",
+      "outcome": "Done"
+    },
+    {
+      "$id": "313",
+      "sourceActivityId": "39cfd978-a1ba-4863-8b99-5b69a2211f7b",
+      "targetActivityId": "cd8ab81a-3517-46d5-bea9-73c7722fe138",
+      "outcome": "Done"
+    },
+    {
+      "$id": "314",
+      "sourceActivityId": "cd8ab81a-3517-46d5-bea9-73c7722fe138",
+      "targetActivityId": "4d078a15-4969-4039-8345-8a0e1d9ee84e",
+      "outcome": "200"
+    },
+    {
+      "$id": "315",
+      "sourceActivityId": "4d078a15-4969-4039-8345-8a0e1d9ee84e",
+      "targetActivityId": "d1e8f85c-3d6e-453f-89fc-08d94601fc84",
+      "outcome": "Done"
+    },
+    {
+      "$id": "316",
+      "sourceActivityId": "6e579e34-92a7-4755-9f40-014674b046b4",
+      "targetActivityId": "960bbeb3-9781-4bab-b6d6-b0ab68d17aab",
+      "outcome": "Recordatorio"
+    },
+    {
+      "$id": "317",
+      "sourceActivityId": "d1e8f85c-3d6e-453f-89fc-08d94601fc84",
+      "targetActivityId": "c1515f9c-d077-4afc-8013-2a6d92b6255d",
+      "outcome": "Done"
+    },
+    {
+      "$id": "318",
+      "sourceActivityId": "960bbeb3-9781-4bab-b6d6-b0ab68d17aab",
+      "targetActivityId": "36c337a8-c076-4dc3-9ef8-b4c116bd4c86",
+      "outcome": "Done"
+    },
+    {
+      "$id": "319",
+      "sourceActivityId": "36c337a8-c076-4dc3-9ef8-b4c116bd4c86",
+      "targetActivityId": "d1e8f85c-3d6e-453f-89fc-08d94601fc84",
+      "outcome": "True"
+    },
+    {
+      "$id": "320",
+      "sourceActivityId": "36c337a8-c076-4dc3-9ef8-b4c116bd4c86",
+      "targetActivityId": "f42e3962-248c-42d1-b969-d8ef30343bee",
+      "outcome": "False"
+    },
+    {
+      "$id": "321",
+      "sourceActivityId": "f42e3962-248c-42d1-b969-d8ef30343bee",
+      "targetActivityId": "960bbeb3-9781-4bab-b6d6-b0ab68d17aab",
+      "outcome": "Done"
+    },
+    {
+      "$id": "322",
+      "sourceActivityId": "fabd99b2-004c-47bb-8593-bca67554137e",
+      "targetActivityId": "45b77456-ed4b-470a-b822-7381c21c2418",
+      "outcome": "Recordatorio"
+    },
+    {
+      "$id": "323",
+      "sourceActivityId": "cd8ab81a-3517-46d5-bea9-73c7722fe138",
+      "targetActivityId": "a95f97d3-4117-4d3d-bed7-a1ad4c4f51b4",
+      "outcome": "Unsupported Status Code"
+    },
+    {
+      "$id": "324",
+      "sourceActivityId": "c1515f9c-d077-4afc-8013-2a6d92b6255d",
+      "targetActivityId": "c6c28a0b-cb3e-46d9-a013-33041512dcdf",
+      "outcome": "Done"
+    }
+  ],
+  "id": "4b23c66329a84c45982d7df9da52099b"
+}

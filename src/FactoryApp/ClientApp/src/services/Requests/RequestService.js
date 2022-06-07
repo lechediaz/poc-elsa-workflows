@@ -13,6 +13,8 @@ class _RequestService {
     return axios.delete(url);
   };
 
+  getREquestToComplete = () => axios.get(API_ROUTES.REQUESTS_TO_COMPLETE);
+
   getUserRequests = (userId) => {
     const url = API_ROUTES.USER_REQUESTS.replace('{userId}', userId);
     return axios.get(url);

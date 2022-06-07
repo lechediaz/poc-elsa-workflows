@@ -11,6 +11,15 @@ export const getStatusName = (status) => {
     case 3:
       statusName = 'Rechazada';
       break;
+    case 4:
+      statusName = 'En negociación';
+      break;
+    case 5:
+      statusName = 'En camino';
+      break;
+    case 6:
+      statusName = 'Completada';
+      break;
 
     default:
       statusName = 'Borrador';

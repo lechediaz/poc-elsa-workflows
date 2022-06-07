@@ -1,11 +1,11 @@
 {
   "$id": "1",
-  "definitionId": "2da080296f224c8792c84d6bce11b104",
-  "versionId": "83c1c6d8798840d09cd93b79f36c641b",
+  "definitionId": "88c683f62dcb4c84817b7b15333464c2",
+  "versionId": "6dc6b69ed4314e30b3d6520f044da52a",
   "name": "PublicarSolicitud",
   "displayName": "Publicación y Aprobación de Solicitudes",
   "description": "Flujo de aprobación de solicitudes para integrar Elsa a una API.",
-  "version": 3,
+  "version": 2,
   "variables": {
     "$id": "2",
     "data": {}
@@ -152,7 +152,7 @@
           "syntax": "Liquid",
           "expressions": {
             "$id": "30",
-            "Liquid": "Request received from {{Variables.Solicitud.Author.Name}}"
+            "Liquid": "Solicitud recibida de {{Variables.Solicitud.Author.Name}}"
           }
         },
         {
@@ -168,7 +168,7 @@
           "syntax": "Liquid",
           "expressions": {
             "$id": "34",
-            "Liquid": "Hello {{ Variables.Solicitud.Approver.Name }},<br><br>You received a request from {{ Variables.Solicitud.Author.Name }} for review.<br><br><a href=\"{{ Variables.ApproveLink }}\">Approve</a> or <a href=\"{{ Variables.RejectLink }}\">Reject</a>"
+            "Liquid": "Hola {{ Variables.Solicitud.Approver.Name }},<br><br>Haz recibido una solicitud de {{ Variables.Solicitud.Author.Name }} para revisar.<br><br><a href=\"{{ Variables.ApproveLink }}\">Aprobar</a> or <a href=\"{{ Variables.RejectLink }}\">Rechazar</a>"
           }
         },
         {
@@ -313,7 +313,7 @@
           "syntax": "Liquid",
           "expressions": {
             "$id": "62",
-            "Liquid": "Request {{ Variables.Solicitud.RequestId }} Approved!"
+            "Liquid": "Solicitud {{ Variables.Solicitud.RequestId }} Aprobada"
           }
         },
         {
@@ -329,7 +329,7 @@
           "syntax": "Liquid",
           "expressions": {
             "$id": "66",
-            "Liquid": "Great job {{ Variables.Solicitud.Author.Name }}, that request is perfect."
+            "Liquid": "Hola {{ Variables.Solicitud.Author.Name }},<br><br>He revisado la solicitud {{ Variables.Solicitud.RequestId }} y me parece que todo esta bien, queda aprobada.<br><br>Saludos."
           }
         },
         {
@@ -404,7 +404,7 @@
           "syntax": "Liquid",
           "expressions": {
             "$id": "80",
-            "Liquid": "Document {{ Variables.Solicitud.RequestId }} Rejected"
+            "Liquid": "Solicitud {{ Variables.Solicitud.RequestId }} Rechazada"
           }
         },
         {
@@ -420,7 +420,7 @@
           "syntax": "Liquid",
           "expressions": {
             "$id": "84",
-            "Liquid": "Nice try {{ Variables.Solicitud.Author.Name }}, but that request needs work."
+            "Liquid": "Hola {{ Variables.Solicitud.Author.Name }},<br><br>He revisado la solicitud {{ Variables.Solicitud.RequestId }} y creo que debemos reunirnos para definir algunos detalles, queda rechazada.<br><br>Saludos."
           }
         },
         {
@@ -495,7 +495,7 @@
           "syntax": "Liquid",
           "expressions": {
             "$id": "98",
-            "Liquid": "{{ Variables.Solicitud.Author.Name }} is waiting for your review!"
+            "Liquid": "Recordatorio: Revisar la solicitud de {{ Variables.Solicitud.Author.Name }}"
           }
         },
         {
@@ -511,7 +511,7 @@
           "syntax": "Liquid",
           "expressions": {
             "$id": "102",
-            "Liquid": "Don't forget to review the request {{ Variables.Solicitud.RequestId }}.<br><a href=\"{{ Variables.ApproveLink }}\">Approve</a> or <a href=\"{{ Variables.RejectLink }}\">Reject</a>"
+            "Liquid": "Hola {{ Variables.Solicitud.Approver.Name }},<br><br>Te recordamos que debes revisar la solicitud {{ Variables.Solicitud.RequestId }}.<br><a href=\"{{ Variables.ApproveLink }}\">Aprobar</a> or <a href=\"{{ Variables.RejectLink }}\">Rechazar</a>"
           }
         },
         {
@@ -1371,5 +1371,5 @@
       "outcome": "Done"
     }
   ],
-  "id": "83c1c6d8798840d09cd93b79f36c641b"
+  "id": "6dc6b69ed4314e30b3d6520f044da52a"
 }
