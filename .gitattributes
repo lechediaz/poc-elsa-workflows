@@ -1,5 +1,2 @@
-# 2010
-* -crlf
-
-# 2020
-* text eol=lf 
+* text eol=lf
+*.glb -text
