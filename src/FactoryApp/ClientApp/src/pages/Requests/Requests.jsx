@@ -19,7 +19,7 @@ export const Requests = () => {
 
         let httpRequest;
 
-        if (_userSession.role === ROLES.PRODUCTION) {
+        if ([ROLES.PRODUCTION, ROLES.ADMIN].includes(_userSession.role)) {
           httpRequest = RequestService.getUserRequests(String(_userSession.id));
         } else if (_userSession.role === ROLES.LOGISTICS) {
           httpRequest = RequestService.getREquestToComplete();
