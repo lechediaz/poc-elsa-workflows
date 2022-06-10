@@ -1,6 +1,10 @@
 ## Tabla de contenido
 
 - [Descripción](#descripción)
+  - [Prueba de concepto](#prueba-de-concepto)
+  - [Flujo de aprobación modificado](#flujo-de-aprobación-modificado)
+  - [Estados de una solicitud](#estados-de-una-solicitud)
+  - [Capturas de pantalla](#capturas-de-pantalla)
 - [Contenido](#contenido)
   - [postman](#postman)
   - [scripts](#scripts)
@@ -15,11 +19,71 @@
 
 # Descripción
 
-En este respositorio se experimenta integrando una aplicación Web a flujos de trabajo de ELSA con el fin de realizar la transición de estados de una solicitud de materias primas como parte de una prueba de concepto.
+En este repositorio se encuentra versionado una prueba de concepto que busca integrar flujos de trabajo construidos en **ELSA Workflow** a una aplicación Web, con el fin de experimentar la flexibilidad que ofrece este framework a la hora de definir procesos o flujos de trabajo para nuestras aplicaciones de nuestra compañía o propias.
+
+> Imagen de referencia
 
 <img src="./showing/Learning%20Elsa.png" />
 
-> Imagen de referencia
+## Prueba de concepto
+
+Esta prueba de concepto consiste en una Aplicación Web perteneciente a una fábrica que sirve para controlar el stock de materias primas. Esta se integra con algunos flujos de trabajo definidos en ELSA Workflow para poder hacer seguimiento a las solicitudes de materias primas así:
+
+1. Una vez que el **personal de producción** detecta la necesidad de materias primas, crean una **solicitud** para que un **supervisor** la apruebe.
+2. En caso de ser aprobada la solicitud, se pasa al área de **logística** que son los encargados de realizar las negociaciones con los proveedores.
+3. Finalmente cuando el proveedor despacha la solicitud, desde el área de producción notifican el recibido de las materias primas.
+
+## Flujo de aprobación modificado
+
+Por defecto el flujo de aprobación es el mismo tanto para personal de producción como para los supervisores, pero para demostrar la flexibilidad de ELSA, cambiamos este flujo para hacer que los supervisores no necesiten aprobarse ellos mismos sus solicitudes, sino que pasan directamente al área de logística.
+
+Esto lo puedes hacer importando el flujo de trabajo [publicar-solicitud-modif.json)](workflows/publicar-solicitud-modif.json) sobre el previamete importado con nombre *Publicación y Aprobación de Solicitudes*, ver la sección [Importar flujos de trabajo](#importar-flujos-de-trabajo).
+
+## Estados de una solicitud
+
+Se contemplan los siguientes estados para una solicitud:
+
+- **En borrador:** Indica que una persona del área de producción está construyendo la solicitud.
+- **Publicada:** Indica que la persona del área de producción ha enviado la solicitud para que sea aprobada por un supervisor.
+- **Aprobada:** Indica que el supervisor ha aprobado la solicitud.
+- **Rechazada:** Indica que el supervisor ha rechazado la solicitud.
+- **En negociación:** Indica que alguien del área de logística ha empezado negociaciones con los proveedores.
+- **Despachada:** Indica que se completaron las negociaciones con un proveedor y se han despachado las materias primas de la solicitud.
+- **Completada:** Indica que la persona que solicitó las materias primas las recibió.
+
+## Capturas de pantalla
+
+Si bien la aplicación no es dificil de usar, a continuación se presentan algunas capturas de su funcionamiento:
+
+> Simulación de sesión activa
+
+<img src="./showing/Captura-9.PNG" />
+
+> Creando una solicitud
+
+<img src="./showing/Captura-1.PNG" />
+
+> Revisando una solicitud
+
+<img src="./showing/Captura-2.PNG" />
+
+> Revisando instancias de workflows
+
+<img src="./showing/Captura-3.PNG" />
+
+<img src="./showing/Captura-4.PNG" />
+
+<img src="./showing/Captura-7.PNG" />
+
+> Revisando correos
+
+<img src="./showing/Captura-5.PNG" />
+
+<img src="./showing/Captura-6.PNG" />
+
+> Revisando materias primas
+
+<img src="./showing/Captura-8.PNG" />
 
 # Contenido
 
@@ -92,7 +156,7 @@ docker ps
 
 Como te puedes dar cuenta los contenedores estarían disponbiles así:
 
-- Aplicación Web de la fábrica: Navengando a http://localhost:8010
+- Aplicación Web de la fábrica: Navegando a http://localhost:8010
 - Servidor y Dashboard de ELSA Workflow: Navegando a http://localhost:8011
 - Servidor de SQL Server: Disponible en *localhost* usando el puerto **1414**
 - Servidor SMTP: Captura correos electrónicos enviados desde ELSA, puedes revisar los correos navegando a http://localhost:1080
@@ -107,7 +171,7 @@ La base de datos de la aplicación de la fábrica en este momento se encuentra s
 
 ### Importar flujos de trabajo
 
-Actualmente ELSA se encuentra sin flujos de trabajo, se deben importar los flujos [publicar-solicitud.json](workflows\publicar-solicitud.json) y [negociar-solicitud.json](workflows/negociar-solicitud.json) para hacer esto haz lo siguiente:
+Actualmente ELSA se encuentra sin flujos de trabajo, se deben importar los flujos [publicar-solicitud.json](workflows\publicar-solicitud.json) y [negociar-solicitud.json](workflows/negociar-solicitud.json) para llevar a cabo la prueba de concepto, para lograrlo haz lo siguiente:
 
 1. Navega a http://localhost:8011 y :
 2. Presiona el menú *Workflow Definitions*.
@@ -115,17 +179,21 @@ Actualmente ELSA se encuentra sin flujos de trabajo, se deben importar los flujo
 <img src="showing/import-elsa-1.PNG" />
 
 3. Presiona el botón *Create Worflow*.
+
 <img src="showing/import-elsa-2.PNG" />
 
 4. Presiona el botón *Import*.
+
 <img src="showing/import-elsa-3.PNG" />
 
 5. Escoge el archivo [publicar-solicitud.json](workflows\publicar-solicitud.json) y haz click en *Publish*.
+
 <img src="showing/import-elsa-4.PNG" />
 
 6. Repide los pasos 1-5, pero importando el archivo [negociar-solicitud.json](workflows/negociar-solicitud.json).
 
 Finalmente debes ver lo siguiente desde el menú *Workflow Definitions*.
+
 <img src="showing/import-elsa-5.PNG" />
 
 # Links de interés
